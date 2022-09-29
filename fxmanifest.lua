@@ -8,7 +8,8 @@ shared_scripts {
     'config.lua',
     '@qb-core/shared/locale.lua',
     'locales/en.lua',
-    'locales/*.lua'
+    'locales/*.lua',
+    '@ox_lib/init.lua'
 }
 
 server_scripts {
@@ -28,7 +29,8 @@ dependencies {
     'qb-core',
     'qb-interior',
     'qb-clothing',
-    'qb-weathersync'
+    'qb-weathersync',
+    'ox_lib'
 }
 
 lua54 'yes'
