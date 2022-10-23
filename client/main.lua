@@ -271,14 +271,10 @@ local function EnterApartment(house, apartmentId, new)
             TriggerServerEvent("apartments:server:setCurrentApartment", CurrentApartment)
         end
 
-        if new ~= nil then
-            if new then
-                TriggerEvent('qb-interior:client:SetNewState', true)
-            else
-                TriggerEvent('qb-interior:client:SetNewState', false)
-            end
-        else
-            TriggerEvent('qb-interior:client:SetNewState', false)
+        if new then
+            SetTimeout(1250, function()
+                TriggerEvent('qb-clothes:client:CreateFirstCharacter')
+            end)
         end
     end, apartmentId)
 end
