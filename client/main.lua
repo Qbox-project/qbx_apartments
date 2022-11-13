@@ -457,13 +457,3 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
             end
         end, cData.citizenid)
     end)
-
-RegisterCommand('dw', function (source, args, raw)
-    TriggerEvent('qb-weathersync:client:DisableSync')
-    print('weathersync off')
-end)
-
-RegisterCommand('ew', function (source, args, raw)
-    TriggerEvent('qb-weathersync:client:EnableSync')
-    print('weathersync on')
-end)
