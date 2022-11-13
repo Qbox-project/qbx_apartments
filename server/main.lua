@@ -47,7 +47,6 @@ RegisterNetEvent('qb-apartments:server:SetInsideMeta', function(house, insideId,
         insideMeta.apartment.apartmentId = nil
         insideMeta.house = nil
 
-
         Player.Functions.SetMetaData("inside", insideMeta)
         QBCore.Functions.SetPlayerBucket(src, 0)
     end
@@ -137,6 +136,7 @@ RegisterNetEvent('apartments:server:setCurrentApartment', function(ap)
     if not Player then return end
 
     Player.Functions.SetMetaData('currentapartment', ap)
+    if ap then exports.ox_inventory:RegisterStash(ap, "Stash", 200, 20000) end
 end)
 
 -- Callbacks
