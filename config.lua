@@ -1,4 +1,6 @@
 Apartments = {}
+Apartments.Slot = 50
+Apartments.Weight = 200
 Apartments.Starting = true
 Apartments.SpawnOffset = 30
 Apartments.Locations = {

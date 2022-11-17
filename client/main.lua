@@ -1,6 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local ApartmentZones, HouseObj, POIOffsets = {}, {}, {}
-local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId, currentEntrance, currentDoorBell = false, false, 0, nil, nil, nil, 0
+local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId, currentApartmentOwner, currentEntrance, currentDoorBell = false, false, 0, nil, nil, nil, nil, 0
 
 -- Functions
     local function OpenHouseAnim()
@@ -75,7 +75,7 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
             elseif self.typ == 'leave' then
                 ShowExitHeaderMenu()
             elseif self.typ == 'open_stash' then
-                TriggerEvent('apartments:client:OpenStash', currentApartmentId)
+                TriggerEvent('apartments:client:OpenStash', currentApartment)
             elseif self.typ == 'change_outfit' then
                 TriggerEvent('apartments:client:ChangeOutfit')
             elseif self.typ == 'logout' then
@@ -159,7 +159,8 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
         ApartmentZones[id].logout:remove()
     end
 
-    local function EnterApartment(house, apartmentId, new)
+    local function EnterApartment(house, apartmentId, new, owner)
+        currentApartmentOwner = owner
         currentApartmentId = apartmentId
         currentApartment = house
 
@@ -265,7 +266,7 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
                 TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
                 TriggerServerEvent("apartments:server:setCurrentApartment", nil)
                 HouseObj, POIOffsets = {}, {}
-                currentApartment, currentApartmentId = nil, nil
+                currentApartment, currentApartmentId, currentApartmentOwner = nil, nil, nil
             end)
     end
 
@@ -295,15 +296,15 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
             TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
             TriggerServerEvent("apartments:server:setCurrentApartment", nil)
             HouseObj, POIOffsets = {}, {}
-            currentApartment, currentApartmentId = nil, nil
+            currentApartment, currentApartmentId, currentApartmentOwner = nil, nil, nil
         end)
     end
 
 -- Events
     RegisterNetEvent('apartments:client:EnterApartment', function(id)
-        QBCore.Functions.TriggerCallback('apartments:GetOwnedApartment', function(result)
+        QBCore.Functions.TriggerCallback('apartments:GetOwnedApartment', function(result, apartmentOwner)
             if result ~= nil then
-                EnterApartment(id, result.name)
+                EnterApartment(id, result.name, false, apartmentOwner)
             end
         end)
     end)
@@ -377,17 +378,17 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
         TriggerServerEvent('qb-houses:server:LogoutLocation')
     end)
 
-    RegisterNetEvent('apartments:client:OpenStash', function(id)
-        exports.ox_inventory:openInventory('stash', id)
+    RegisterNetEvent('apartments:client:OpenStash', function(apId)
+        exports.ox_inventory:openInventory('stash', apId)
     end)
 
-    RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apartment)
+    RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apartment, ownerCid)
         local pos = GetEntityCoords(cache.ped)
         local new = true
         
         if RangDoorbell then
             new = false
-            local doorbelldist = #(pos - vector3(Apartments.Locations[RangDoorbell].enter.x, Apartments.Locations[RangDoorbell].enter.y,Apartments.Locations[RangDoorbell].enter.z))
+            local doorbelldist = #(pos - vector3(Apartments.Locations[RangDoorbell].enter.x, Apartments.Locations[RangDoorbell].enter.y, Apartments.Locations[RangDoorbell].enter.z))
             if doorbelldist > 5 then
                 QBCore.Functions.Notify(Lang:t('error.to_far_from_door'))
                 return
@@ -396,7 +397,8 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
 
         currentApartment = apartment
         currentApartmentId = apartmentId
-        EnterApartment(apartment, apartmentId, new)
+        currentApartmentOwner = ownerCid
+        EnterApartment(apartment, apartmentId, new, ownerCid)
         isOwned = true
     end)
 
@@ -428,7 +430,7 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
                 SetEntityHeading(cache.ped, Apartments.Locations[currentApartment].enter.w)
                 RemoveInsidePoints(currentApartment)
                 HouseObj, POIOffsets = {}, {}
-                currentApartment, currentApartmentId = nil, nil
+                currentApartment, currentApartmentId, currentApartmentOwner = nil, nil, nil
                 currentOffset = 0
                 TriggerServerEvent('qb-apartments:returnBucket')
             end

@@ -2,7 +2,6 @@ local ApartmentObjects = {}
 local QBCore = exports['qb-core']:GetCoreObject()
 
 -- Functions
-
 local function CreateApartmentId(type)
     local UniqueFound = false
 	local AparmentId = nil
@@ -93,8 +92,9 @@ end)
 
 RegisterNetEvent('apartments:server:OpenDoor', function(target, apartmentId, apartment)
     local OtherPlayer = QBCore.Functions.GetPlayer(target)
+    local OwnerPlayer = QBCore.Functions.GetPlayer(source) -- Aki be enged
     if OtherPlayer ~= nil then
-        TriggerClientEvent('apartments:client:SpawnInApartment', OtherPlayer.PlayerData.source, apartmentId, apartment)
+        TriggerClientEvent('apartments:client:SpawnInApartment', OtherPlayer.PlayerData.source, apartmentId, apartment, OwnerPlayer.PlayerData.citizenid)
     end
 end)
 
@@ -134,9 +134,7 @@ RegisterNetEvent('apartments:server:setCurrentApartment', function(ap)
     local Player = QBCore.Functions.GetPlayer(source)
 
     if not Player then return end
-
     Player.Functions.SetMetaData('currentapartment', ap)
-    if ap then exports.ox_inventory:RegisterStash(ap, "Stash", 200, 20000) end
 end)
 
 -- Callbacks
@@ -182,7 +180,7 @@ QBCore.Functions.CreateCallback('apartments:GetOwnedApartment', function(source,
     if cid ~= nil then
         local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { cid })
         if result[1] ~= nil then
-            return cb(result[1])
+            return cb(result[1], cid)
         end
         return cb(nil)
     else
@@ -190,7 +188,7 @@ QBCore.Functions.CreateCallback('apartments:GetOwnedApartment', function(source,
         local Player = QBCore.Functions.GetPlayer(src)
         local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { Player.PlayerData.citizenid })
         if result[1] ~= nil then
-            return cb(result[1])
+            return cb(result[1], Player.PlayerData.citizenid)
         end
         return cb(nil)
     end
@@ -213,7 +211,6 @@ QBCore.Functions.CreateCallback('apartments:IsOwner', function(source, cb, apart
     end
 end)
 
-
 QBCore.Functions.CreateCallback('apartments:GetOutfits', function(source, cb)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
@@ -224,6 +221,15 @@ QBCore.Functions.CreateCallback('apartments:GetOutfits', function(source, cb)
             cb(result)
         else
             cb(nil)
+        end
+    end
+end)
+
+-- RegisterStash
+AddEventHandler('onServerResourceStart', function(resourceName)
+    if resourceName == 'ox_inventory' or resourceName == GetCurrentResourceName() then
+        for k,v in pairs(Apartments.Locations) do
+            exports.ox_inventory:RegisterStash(k, v.label, Apartments.Slot, Apartments.Weight * 1000, true)
         end
     end
 end)
