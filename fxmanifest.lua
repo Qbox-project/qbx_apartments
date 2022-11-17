@@ -19,17 +19,16 @@ server_scripts {
 
 client_scripts {
     'client/main.lua',
-    'client/gui.lua',
-    '@PolyZone/client.lua',
-    '@PolyZone/BoxZone.lua',
-    '@PolyZone/CircleZone.lua',
+    'client/gui.lua'
 }
 
 dependencies {
     'qb-core',
     'qb-interior',
     'qb-clothing',
-    'qb-weathersync'
+    'qb-weathersync',
+    'ox_lib',
+    'ox_inventory'
 }
 
 lua54 'yes'
