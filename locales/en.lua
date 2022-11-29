@@ -6,14 +6,14 @@ local Translations = {
     },
     success = {
         receive_apart = 'You got a apartment',
-        changed_apart = 'You moved apartments',
+        changed_apart = 'You moved apartments'
     },
     info = {
-        at_the_door = 'Someone is at the door!',
+        at_the_door = 'Someone is at the door!'
     },
     text = {
         menu_header = 'Apartments',
-        options = '[E] Apartment Options',
+        options = 'Apartment Options',
         enter = 'Enter Apartment',
         ring_doorbell = 'Ring Doorbell',
         logout = 'Logout Character',
@@ -22,9 +22,8 @@ local Translations = {
         move_here = 'Move Here',
         open_door = 'Open Door',
         leave = 'Leave Apartment',
-        close_menu = '⬅ Close Menu',
-        tennants = 'Tennants',
-    },
+        tennants = 'Tennants'
+    }
 }
 
 Lang = Lang or Locale:new({
