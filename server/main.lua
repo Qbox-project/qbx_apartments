@@ -113,12 +113,10 @@ RegisterNetEvent('apartments:server:RingDoor', function(apartmentId, apartment)
 end)
 
 RegisterNetEvent('apartments:server:OpenDoor', function(target, apartmentId, apartment)
-    local src = source
     local OtherPlayer = QBCore.Functions.GetPlayer(target)
-    local OwnerPlayer = QBCore.Functions.GetPlayer(src)
 
     if OtherPlayer then
-        TriggerClientEvent('apartments:client:SpawnInApartment', OtherPlayer.PlayerData.source, apartmentId, apartment, OwnerPlayer.PlayerData.citizenid)
+        TriggerClientEvent('apartments:client:SpawnInApartment', OtherPlayer.PlayerData.source, apartmentId, apartment)
     end
 end)
 
@@ -247,12 +245,12 @@ QBCore.Functions.CreateCallback('apartments:IsOwner', function(source, cb, apart
         return
     end
 
-    local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', {
+    local result = MySQL.single.await('SELECT * FROM apartments WHERE citizenid = ?', {
         Player.PlayerData.citizenid
     })
 
-    if result[1] then
-        if result[1].type == apartment then
+    if result then
+        if result.type == apartment then
             cb(true)
         else
             cb(false)

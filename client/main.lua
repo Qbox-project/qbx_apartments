@@ -176,7 +176,7 @@ local function RemoveInsidePoints(id)
     ApartmentZones[id].logout:remove()
 end
 
-local function EnterApartment(house, apartmentId, new, owner)
+local function EnterApartment(house, apartmentId, new)
     currentApartmentId = apartmentId
     currentApartment = house
 
@@ -371,9 +371,9 @@ end
 
 -- Events
 RegisterNetEvent('apartments:client:EnterApartment', function(id)
-    QBCore.Functions.TriggerCallback('apartments:GetOwnedApartment', function(result, apartmentOwner)
+    QBCore.Functions.TriggerCallback('apartments:GetOwnedApartment', function(result)
         if result then
-            EnterApartment(id, result.name, false, apartmentOwner)
+            EnterApartment(id, result.name, false)
         end
     end)
 end)
@@ -467,7 +467,7 @@ RegisterNetEvent('apartments:client:OpenStash', function(apId)
     exports.ox_inventory:openInventory('stash', apId)
 end)
 
-RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apartment, ownerCid)
+RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apartment)
     local pos = GetEntityCoords(cache.ped)
     local new = true
 
@@ -487,7 +487,7 @@ RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apa
     currentApartment = apartment
     currentApartmentId = apartmentId
 
-    EnterApartment(apartment, apartmentId, new, ownerCid)
+    EnterApartment(apartment, apartmentId, new)
 
     isOwned = true
 end)
