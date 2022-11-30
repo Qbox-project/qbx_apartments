@@ -83,7 +83,10 @@ RegisterNetEvent('apartments:server:CreateApartment', function(type, label)
         Player.PlayerData.citizenid
     })
 
-    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.receive_apart') .. " (" .. label .. ")")
+    TriggerClientEvent('ox_lib:notify', src, {
+        description = Lang:t('success.receive_apart') .. " (" .. label .. ")",
+        type = 'success'
+    })
     TriggerClientEvent("apartments:client:SpawnInApartment", src, apartmentId, type)
     TriggerClientEvent("apartments:client:SetHomeBlip", src, type)
 end)
@@ -98,7 +101,10 @@ RegisterNetEvent('apartments:server:UpdateApartment', function(type, label)
         Player.PlayerData.citizenid
     })
 
-    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.changed_apart'))
+    TriggerClientEvent('ox_lib:notify', src, {
+        description = Lang:t('success.changed_apart') .. " (" .. label .. ")",
+        type = 'success'
+    })
     TriggerClientEvent("apartments:client:SetHomeBlip", src, type)
 end)
 
