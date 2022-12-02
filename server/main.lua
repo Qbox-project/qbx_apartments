@@ -4,10 +4,10 @@ local ApartmentObjects = {}
 -- Functions
 local function CreateApartmentId(apartementType)
     local UniqueFound = false
-	local AparmentId = nil
+    local AparmentId = nil
 
-	while not UniqueFound do
-		AparmentId = tostring(math.random(1, 9999))
+    while not UniqueFound do
+        AparmentId = tostring(math.random(1, 9999))
 
         local result = MySQL.single.await('SELECT COUNT(1) as count FROM apartments WHERE name = ?', {
             tostring(apartementType .. AparmentId)
@@ -16,9 +16,9 @@ local function CreateApartmentId(apartementType)
         if result.count == 0 then
             UniqueFound = true
         end
-	end
+    end
 
-	return AparmentId
+    return AparmentId
 end
 
 local function GetApartmentInfo(apartmentId)
@@ -244,7 +244,7 @@ QBCore.Functions.CreateCallback('apartments:GetOwnedApartment', function(source,
 end)
 
 QBCore.Functions.CreateCallback('apartments:IsOwner', function(source, cb, apartment)
-	local src = source
+    local src = source
     local Player = QBCore.Functions.GetPlayer(src)
 
     if not Player then

@@ -535,7 +535,7 @@ AddEventHandler('onResourceStop', function(resource)
     end
 end)
 
-AddStateBagChangeHandler('isLoggedIn', _, function(_, _, value, _, _)
+AddStateBagChangeHandler('isLoggedIn', nil, function(_, _, value, _, _)
     if value then
         LoggedIn()
     else
