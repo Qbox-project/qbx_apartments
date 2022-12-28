@@ -249,9 +249,7 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
             OpenHouseAnim()
             DoScreenFadeOut(500)
             while not IsScreenFadedOut() do Wait(10) end
-        -- Remove Inside Points
-            RemoveInsidePoints(currentApartment)
-        -- Despawn Interior
+            -- Despawn Interior
             exports['qb-interior']:DespawnInterior(HouseObj, function()
                 -- EnableSync
                 TriggerEvent('qb-weathersync:client:EnableSync')
@@ -265,6 +263,9 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
                 DoScreenFadeIn(1000)
                 TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
                 TriggerServerEvent("apartments:server:setCurrentApartment", nil)
+                -- Remove Inside Points
+                RemoveInsidePoints(currentApartment)
+                -- Reset
                 HouseObj, POIOffsets = {}, {}
                 currentApartment, currentApartmentId, currentApartmentOwner = nil, nil, nil
             end)
