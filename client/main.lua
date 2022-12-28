@@ -1,6 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local ApartmentZones, HouseObj, POIOffsets = {}, {}, {}
-local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId, currentApartmentOwner, currentEntrance, currentDoorBell = false, false, 0, nil, nil, nil, nil, 0
+local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId, currentEntrance, currentDoorBell = false, false, 0, nil, nil, nil, 0
 
 -- Functions
     local function OpenHouseAnim()
@@ -160,7 +160,6 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
     end
 
     local function EnterApartment(house, apartmentId, new, owner)
-        currentApartmentOwner = owner
         currentApartmentId = apartmentId
         currentApartment = house
 
@@ -267,7 +266,7 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
                 RemoveInsidePoints(currentApartment)
                 -- Reset
                 HouseObj, POIOffsets = {}, {}
-                currentApartment, currentApartmentId, currentApartmentOwner = nil, nil, nil
+                currentApartment, currentApartmentId = nil, nil
             end)
     end
 
@@ -297,7 +296,7 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
             TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
             TriggerServerEvent("apartments:server:setCurrentApartment", nil)
             HouseObj, POIOffsets = {}, {}
-            currentApartment, currentApartmentId, currentApartmentOwner = nil, nil, nil
+            currentApartment, currentApartmentId = nil, nil
         end)
     end
 
@@ -398,7 +397,6 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
 
         currentApartment = apartment
         currentApartmentId = apartmentId
-        currentApartmentOwner = ownerCid
         EnterApartment(apartment, apartmentId, new, ownerCid)
         isOwned = true
     end)
@@ -431,7 +429,7 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
                 SetEntityHeading(cache.ped, Apartments.Locations[currentApartment].enter.w)
                 RemoveInsidePoints(currentApartment)
                 HouseObj, POIOffsets = {}, {}
-                currentApartment, currentApartmentId, currentApartmentOwner = nil, nil, nil
+                currentApartment, currentApartmentId = nil, nil
                 currentOffset = 0
                 TriggerServerEvent('qb-apartments:returnBucket')
             end
