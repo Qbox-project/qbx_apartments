@@ -1,0 +1,9 @@
+{
+    "Lua.diagnostics.globals": [
+        "MySQL",
+        "Locale",
+        "cache",
+        "lib",
+        "_"
+    ]
+}

@@ -253,8 +253,9 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
                 -- EnableSync
                 TriggerEvent('qb-weathersync:client:EnableSync')
                 -- Teleport PLayer outside
-                SetEntityCoords(cache.ped, Apartments.Locations[currentApartment].enter.xyz)
-                SetEntityHeading(cache.ped, Apartments.Locations[currentApartment].enter.w)
+                local coord = Apartments.Locations[currentApartment].enter
+                SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
+                SetEntityHeading(cache.ped, coord.w)
                 Wait(1000)
                 TriggerServerEvent("apartments:server:RemoveObject", currentApartmentId, currentApartment)
                 TriggerServerEvent('qb-apartments:server:SetInsideMeta', currentApartmentId, false)
@@ -286,9 +287,9 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
             -- EnableSync
             TriggerEvent('qb-weathersync:client:EnableSync')
             -- Teleport PLayer outside
-            --- @diagnostic disable-next-line: param-type-mismatch
-            SetEntityCoords(cache.ped, Apartments.Locations[currentApartment].enter.xyz)
-            SetEntityHeading(cache.ped, Apartments.Locations[currentApartment].enter.w)
+            local coord = Apartments.Locations[currentApartment].enter
+            SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
+            SetEntityHeading(cache.ped, coord.w)
             Wait(1000)
             TriggerServerEvent("apartments:server:RemoveObject", currentApartmentId, currentApartment)
             currentOffset = 0
@@ -425,8 +426,9 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
                     DoScreenFadeIn(1000)
                 end)
 
-                SetEntityCoords(cache.ped, Apartments.Locations[currentApartment].enter.x, Apartments.Locations[currentApartment].enter.y,Apartments.Locations[currentApartment].enter.z)
-                SetEntityHeading(cache.ped, Apartments.Locations[currentApartment].enter.w)
+                local coord = Apartments.Locations[currentApartment].enter
+                SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
+                SetEntityHeading(cache.ped, coord.w)
                 RemoveInsidePoints(currentApartment)
                 HouseObj, POIOffsets = {}, {}
                 currentApartment, currentApartmentId = nil, nil
