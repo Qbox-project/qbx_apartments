@@ -1,6 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local ApartmentZones, HouseObj, POIOffsets = {}, {}, {}
-local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId, currentApartmentOwner, currentEntrance, currentDoorBell = false, false, 0, nil, nil, nil, nil, 0
+local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId, currentEntrance, currentDoorBell = false, false, 0, nil, nil, nil, 0
 
 -- Functions
     local function OpenHouseAnim()
@@ -160,7 +160,6 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
     end
 
     local function EnterApartment(house, apartmentId, new, owner)
-        currentApartmentOwner = owner
         currentApartmentId = apartmentId
         currentApartment = house
 
@@ -249,15 +248,14 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
             OpenHouseAnim()
             DoScreenFadeOut(500)
             while not IsScreenFadedOut() do Wait(10) end
-        -- Remove Inside Points
-            RemoveInsidePoints(currentApartment)
-        -- Despawn Interior
+            -- Despawn Interior
             exports['qb-interior']:DespawnInterior(HouseObj, function()
                 -- EnableSync
                 TriggerEvent('qb-weathersync:client:EnableSync')
                 -- Teleport PLayer outside
-                SetEntityCoords(cache.ped, Apartments.Locations[currentApartment].enter.xyz)
-                SetEntityHeading(cache.ped, Apartments.Locations[currentApartment].enter.w)
+                local coord = Apartments.Locations[currentApartment].enter
+                SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
+                SetEntityHeading(cache.ped, coord.w)
                 Wait(1000)
                 TriggerServerEvent("apartments:server:RemoveObject", currentApartmentId, currentApartment)
                 TriggerServerEvent('qb-apartments:server:SetInsideMeta', currentApartmentId, false)
@@ -265,8 +263,11 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
                 DoScreenFadeIn(1000)
                 TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
                 TriggerServerEvent("apartments:server:setCurrentApartment", nil)
+                -- Remove Inside Points
+                RemoveInsidePoints(currentApartment)
+                -- Reset
                 HouseObj, POIOffsets = {}, {}
-                currentApartment, currentApartmentId, currentApartmentOwner = nil, nil, nil
+                currentApartment, currentApartmentId = nil, nil
             end)
     end
 
@@ -286,9 +287,9 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
             -- EnableSync
             TriggerEvent('qb-weathersync:client:EnableSync')
             -- Teleport PLayer outside
-            --- @diagnostic disable-next-line: param-type-mismatch
-            SetEntityCoords(cache.ped, Apartments.Locations[currentApartment].enter.xyz)
-            SetEntityHeading(cache.ped, Apartments.Locations[currentApartment].enter.w)
+            local coord = Apartments.Locations[currentApartment].enter
+            SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
+            SetEntityHeading(cache.ped, coord.w)
             Wait(1000)
             TriggerServerEvent("apartments:server:RemoveObject", currentApartmentId, currentApartment)
             currentOffset = 0
@@ -296,7 +297,7 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
             TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
             TriggerServerEvent("apartments:server:setCurrentApartment", nil)
             HouseObj, POIOffsets = {}, {}
-            currentApartment, currentApartmentId, currentApartmentOwner = nil, nil, nil
+            currentApartment, currentApartmentId = nil, nil
         end)
     end
 
@@ -397,7 +398,6 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
 
         currentApartment = apartment
         currentApartmentId = apartmentId
-        currentApartmentOwner = ownerCid
         EnterApartment(apartment, apartmentId, new, ownerCid)
         isOwned = true
     end)
@@ -426,11 +426,12 @@ local isOwned, RangDoorbell, currentOffset, currentApartment, currentApartmentId
                     DoScreenFadeIn(1000)
                 end)
 
-                SetEntityCoords(cache.ped, Apartments.Locations[currentApartment].enter.x, Apartments.Locations[currentApartment].enter.y,Apartments.Locations[currentApartment].enter.z)
-                SetEntityHeading(cache.ped, Apartments.Locations[currentApartment].enter.w)
+                local coord = Apartments.Locations[currentApartment].enter
+                SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
+                SetEntityHeading(cache.ped, coord.w)
                 RemoveInsidePoints(currentApartment)
                 HouseObj, POIOffsets = {}, {}
-                currentApartment, currentApartmentId, currentApartmentOwner = nil, nil, nil
+                currentApartment, currentApartmentId = nil, nil
                 currentOffset = 0
                 TriggerServerEvent('qb-apartments:returnBucket')
             end
