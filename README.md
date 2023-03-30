@@ -1,13 +1,13 @@
-# qb-apartments
-Apartments System for QB-Core Framework :office:
+# qbx-apartments
+Apartments System for QBOX-Core Framework :office:
 
 ## Dependencies
-- [qb-core](https://github.com/qbcore-framework/qb-core)
-- [qb-clothing](https://github.com/qbcore-framework/qb-clothing) - To save outfits
-- [qb-houses](https://github.com/qbcore-framework/qb-houses) - House logic
-- [qb-interior](https://github.com/qbcore-framework/qb-interior) - Interior logic
-- [qb-weathersync](https://github.com/qbcore-framework/qb-weathersync) - To desync weather while inside
-- [qb-spawn](https://github.com/qbcore-framework/qb-spawn) - To spawn the player at apartment if last location was in apartment
+- [qbx-core](https://github.com/Qbox-project/qbx-core)
+- [qbx-clothing](https://github.com/Qbox-project/qbx-clothing) - To save outfits
+- [qbx-houses](https://github.com/Qbox-project/qbx-houses) - House logic
+- [qbx-interior](https://github.com/Qbox-project/qbx-interior) - Interior logic
+- [qbx-weathersync](https://github.com/Qbox-project/qbx-weathersync) - To desync weather while inside
+- [qbx-spawn](https://github.com/Qbox-project/qbx-spawn) - To spawn the player at apartment if last location was in apartment
 
 ## Screenshots
 ![Inside Apartment](https://i.imgur.com/mp3XL4Y.jpg)
@@ -25,17 +25,17 @@ Apartments System for QB-Core Framework :office:
 
 ## Installation
 ### Manual
-- Download the script and put it in the `[qb]` directory.
-- Import `qb-apartments.sql` in your database
+- Download the script and put it in the `[qbx]` directory.
+- Import `qbx-apartments.sql` in your database
 - Add the following code to your server.cfg/resouces.cfg
 ```
-ensure qb-core
-ensure qb-interior
-ensure qb-weathersync
-ensure qb-clothing
-ensure qb-houses
-ensure qb-spawn
-ensure qb-apartments
+ensure qbx-core
+ensure qbx-interior
+ensure qbx-weathersync
+ensure qbx-clothing
+ensure qbx-houses
+ensure qbx-spawn
+ensure qbx-apartments
 ```
 
 ## Configuration
