@@ -10,7 +10,6 @@ shared_scripts {
     'config.lua',
     'locales/en.lua',
     'locales/*.lua',
-
 }
 
 server_scripts {
