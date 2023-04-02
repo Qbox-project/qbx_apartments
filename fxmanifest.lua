@@ -1,15 +1,15 @@
 fx_version 'cerulean'
 game 'gta5'
 
-description 'QB-Apartments'
+description 'QBX-Apartments'
 version '2.1.0'
 
 shared_scripts {
+    '@qbx-core/shared/locale.lua',
+    '@ox_lib/init.lua',
     'config.lua',
-    '@qb-core/shared/locale.lua',
     'locales/en.lua',
     'locales/*.lua',
-    '@ox_lib/init.lua'
 }
 
 server_scripts {
@@ -23,12 +23,11 @@ client_scripts {
 }
 
 dependencies {
-    'qb-core',
-    'qb-interior',
-    'qb-clothing',
-    'qb-weathersync',
     'ox_lib',
-    'ox_inventory'
+    'ox_inventory',
+    'qbx-core',
+    'qbx-interior',
+    'qbx-weathersync',
 }
 
 lua54 'yes'
