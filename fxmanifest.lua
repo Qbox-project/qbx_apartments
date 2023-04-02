@@ -27,7 +27,6 @@ dependencies {
     'ox_inventory',
     'qbx-core',
     'qbx-interior',
-    'qbx-clothing',
     'qbx-weathersync',
 }
 
