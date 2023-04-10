@@ -18,8 +18,7 @@ server_scripts {
 }
 
 client_scripts {
-    'client/main.lua',
-    'client/gui.lua'
+    'client/main.lua'
 }
 
 dependencies {
