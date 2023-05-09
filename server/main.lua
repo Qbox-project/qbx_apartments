@@ -4,9 +4,10 @@ local QBCore = exports['qbx-core']:GetCoreObject()
 -- Functions
 local function createApartmentId(type)
 	local aparmentId = nil
+    local result = nil
 	repeat
 		aparmentId = tostring(math.random(1, 9999))
-        local result = MySQL.query.await('SELECT * FROM apartments WHERE name = ?', { type .. aparmentId })
+        result = MySQL.query.await('SELECT * FROM apartments WHERE name = ?', { type .. aparmentId })
     until result == nil
 	return aparmentId
 end
