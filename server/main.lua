@@ -7,14 +7,14 @@ local function createApartmentId(type)
     local result = nil
 	repeat
 		aparmentId = tostring(math.random(1, 9999))
-        result = MySQL.query.await('SELECT * FROM apartments WHERE name = ?', { type .. aparmentId })
+        result = MySQL.single.await('SELECT * FROM apartments WHERE name = ?', { type .. aparmentId })
     until result == nil
 	return aparmentId
 end
 
 local function getApartmentInfo(apartmentId)
-    local result = MySQL.query.await('SELECT * FROM apartments WHERE name = ?', { apartmentId })
-    return result[1]
+    local result = MySQL.single.await('SELECT * FROM apartments WHERE name = ?', { apartmentId })
+    return result
 end
 
 -- Events
@@ -44,10 +44,12 @@ RegisterNetEvent('qb-apartments:server:SetInsideMeta', function(house, insideId,
 end)
 
 RegisterNetEvent('qb-apartments:returnBucket', function()
-    SetPlayerRoutingBucket(source, 0)
+    local src = source
+    SetPlayerRoutingBucket(src, 0)
 end)
 
 RegisterNetEvent('apartments:server:CreateApartment', function(type, label)
+    local src = source
     local player = QBCore.Functions.GetPlayer(source)
     local num = createApartmentId(type)
     local apartmentId = type .. num
@@ -58,9 +60,9 @@ RegisterNetEvent('apartments:server:CreateApartment', function(type, label)
         label,
         player.PlayerData.citizenid
     })
-    TriggerClientEvent('QBCore:Notify', source, Lang:t('success.receive_apart').." ("..label..")")
-    TriggerClientEvent("apartments:client:SpawnInApartment", source, apartmentId, type)
-    TriggerClientEvent("apartments:client:SetHomeBlip", source, type)
+    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.receive_apart').." ("..label..")")
+    TriggerClientEvent("apartments:client:SpawnInApartment", src, apartmentId, type)
+    TriggerClientEvent("apartments:client:SetHomeBlip", src, type)
 end)
 
 RegisterNetEvent('apartments:server:UpdateApartment', function(type, label)
@@ -176,32 +178,35 @@ QBCore.Functions.CreateCallback('apartments:GetApartmentOffsetNewOffset', functi
 end)
 
 QBCore.Functions.CreateCallback('apartments:GetOwnedApartment', function(source, cb, cid)
+    local src = source
     if not cid then
-        local player = QBCore.Functions.GetPlayer(source)
+        local player = QBCore.Functions.GetPlayer(src)
         cid = player.PlayerData.citizenid
     end
 
-    local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { cid })
-    if result[1] then
-        return cb(result[1], cid)
+    local result = MySQL.single.await('SELECT * FROM apartments WHERE citizenid = ?', { cid })
+    if result then
+        return cb(result, cid)
     end
     return cb(nil)
 end)
 
 QBCore.Functions.CreateCallback('apartments:IsOwner', function(source, cb, apartment)
-    local player = QBCore.Functions.GetPlayer(source)
+    local src = source
+    local player = QBCore.Functions.GetPlayer(src)
     if not player then return end
 
-    local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { player.PlayerData.citizenid })
-    if result[1] then
-        cb(result[1].type == apartment)
+    local result = MySQL.single.await('SELECT * FROM apartments WHERE citizenid = ?', { player.PlayerData.citizenid })
+    if result then
+        cb(result.type == apartment)
     else
         cb(false)
     end
 end)
 
 QBCore.Functions.CreateCallback('apartments:GetOutfits', function(source, cb)
-    local player = QBCore.Functions.GetPlayer(source)
+    local src = source
+    local player = QBCore.Functions.GetPlayer(src)
     if not player then return end
 
     local result = MySQL.query.await('SELECT * FROM player_outfits WHERE citizenid = ?', { player.PlayerData.citizenid })
