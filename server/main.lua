@@ -14,7 +14,7 @@ end
 
 local function getApartmentInfo(apartmentId)
     local result = MySQL.query.await('SELECT * FROM apartments WHERE name = ?', { apartmentId })
-    return result[1] or nil
+    return result[1]
 end
 
 -- Events
@@ -117,7 +117,6 @@ RegisterNetEvent('apartments:server:RemoveObject', function(apartmentId, apartme
     local src = source
     local apartmentObj = ApartmentObjects[apartment]
     if not apartmentObj.apartments[apartmentId].players then return end
-
     apartmentObj.apartments[apartmentId].players[src] = nil
     if not next(apartmentObj.apartments[apartmentId].players) then
         apartmentObj.apartments[apartmentId] = nil
@@ -183,7 +182,6 @@ QBCore.Functions.CreateCallback('apartments:GetOwnedApartment', function(source,
     end
 
     local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { cid })
-
     if result[1] then
         return cb(result[1], cid)
     end
