@@ -7,8 +7,8 @@ local function createApartmentId(type)
     local result = nil
 	repeat
 		aparmentId = tostring(math.random(1, 9999))
-        result = MySQL.query.await('SELECT * FROM apartments WHERE name = ?', { type .. aparmentId })
-    until result == nil
+        result = MySQL.query.await('SELECT COUNT(*) as count FROM apartments WHERE name = ?', { type .. aparmentId })
+    until result[1].count == 0
 	return aparmentId
 end
 
@@ -48,7 +48,8 @@ RegisterNetEvent('qb-apartments:returnBucket', function()
 end)
 
 RegisterNetEvent('apartments:server:CreateApartment', function(type, label)
-    local player = QBCore.Functions.GetPlayer(source)
+    local src = source
+    local player = QBCore.Functions.GetPlayer(src)
     local num = createApartmentId(type)
     local apartmentId = type .. num
     label = label .. " " .. num
@@ -58,9 +59,9 @@ RegisterNetEvent('apartments:server:CreateApartment', function(type, label)
         label,
         player.PlayerData.citizenid
     })
-    TriggerClientEvent('QBCore:Notify', source, Lang:t('success.receive_apart').." ("..label..")")
-    TriggerClientEvent("apartments:client:SpawnInApartment", source, apartmentId, type)
-    TriggerClientEvent("apartments:client:SetHomeBlip", source, type)
+    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.receive_apart').." ("..label..")")
+    TriggerClientEvent("apartments:client:SpawnInApartment", src, apartmentId, type)
+    TriggerClientEvent("apartments:client:SetHomeBlip", src, type)
 end)
 
 RegisterNetEvent('apartments:server:UpdateApartment', function(type, label)
@@ -93,7 +94,7 @@ RegisterNetEvent('apartments:server:AddObject', function(apartmentId, apartment,
     local src = source
     local player = QBCore.Functions.GetPlayer(src)
     local apartmentObj = ApartmentObjects[apartment]
-    
+
     if not apartmentObj then
         ApartmentObjects[apartment] = {}
         apartmentObj = ApartmentObjects[apartment]
@@ -116,7 +117,6 @@ RegisterNetEvent('apartments:server:RemoveObject', function(apartmentId, apartme
     local src = source
     local apartmentObj = ApartmentObjects[apartment]
     if not apartmentObj.apartments[apartmentId].players then return end
-    
     apartmentObj.apartments[apartmentId].players[src] = nil
     if not next(apartmentObj.apartments[apartmentId].players) then
         apartmentObj.apartments[apartmentId] = nil
