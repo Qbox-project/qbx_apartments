@@ -132,11 +132,10 @@ end)
 
 -- Callbacks
 
-QBCore.Functions.CreateCallback('apartments:GetAvailableApartments', function(_, cb, apartment)
+lib.callback.register('apartments:GetAvailableApartments', function(_, apartment)
     local apartments = {}
     if not ApartmentObjects or not ApartmentObjects[apartment] or not ApartmentObjects[apartment].apartments then
-        cb(apartments)
-        return
+        return apartments
     end
     for apartmentId, apartmentVal in pairs(ApartmentObjects[apartment].apartments) do
         if next(apartmentVal.players) then
@@ -145,37 +144,35 @@ QBCore.Functions.CreateCallback('apartments:GetAvailableApartments', function(_,
         end
     end
 
-    cb(apartments)
+    return apartments
 end)
 
-QBCore.Functions.CreateCallback('apartments:GetApartmentOffset', function(_, cb, apartmentId)
+lib.callback.register('apartments:GetApartmentOffset', function(_, apartmentId)
     local retval = 0
     if not ApartmentObjects then
-        cb(retval)
-        return
+        return retval
     end
     for _, v in pairs(ApartmentObjects) do
         if (v.apartments[apartmentId] and tonumber(v.apartments[apartmentId].offset) ~= 0) then
             retval = tonumber(v.apartments[apartmentId].offset)
         end
     end
-    cb(retval)
+    return retval
 end)
 
-QBCore.Functions.CreateCallback('apartments:GetApartmentOffsetNewOffset', function(_, cb, apartment)
+lib.callback.register('apartments:GetApartmentOffsetNewOffset', function(_, apartment)
     local retval = Apartments.SpawnOffset
     if not ApartmentObjects or not ApartmentObjects[apartment] or not ApartmentObjects[apartment].apartments then
-        cb(retval)
-        return
+        return retval
     end
     local apartments = ApartmentObjects[apartment].apartments
     for _, v in pairs(apartments) do
         retval = v.offset + Apartments.SpawnOffset
     end
-    cb(retval)
+    return retval
 end)
 
-QBCore.Functions.CreateCallback('apartments:GetOwnedApartment', function(source, cb, cid)
+lib.callback.register('apartments:GetOwnedApartment', function(source, cid)
     if not cid then
         local player = QBCore.Functions.GetPlayer(source)
         cid = player.PlayerData.citizenid
@@ -183,32 +180,19 @@ QBCore.Functions.CreateCallback('apartments:GetOwnedApartment', function(source,
 
     local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { cid })
     if result[1] then
-        return cb(result[1], cid)
+        return result[1]
     end
-    return cb(nil)
 end)
 
-QBCore.Functions.CreateCallback('apartments:IsOwner', function(source, cb, apartment)
+lib.callback.register('apartments:IsOwner', function(source, apartment)
     local player = QBCore.Functions.GetPlayer(source)
     if not player then return end
 
     local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { player.PlayerData.citizenid })
     if result[1] then
-        cb(result[1].type == apartment)
+        return result[1].type == apartment
     else
-        cb(false)
-    end
-end)
-
-QBCore.Functions.CreateCallback('apartments:GetOutfits', function(source, cb)
-    local player = QBCore.Functions.GetPlayer(source)
-    if not player then return end
-
-    local result = MySQL.query.await('SELECT * FROM player_outfits WHERE citizenid = ?', { player.PlayerData.citizenid })
-    if result[1] then
-        cb(result)
-    else
-        cb(nil)
+        return false
     end
 end)
 
