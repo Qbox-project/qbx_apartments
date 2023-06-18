@@ -77,9 +77,9 @@ end
 
 local function isInside(self)
     if IsControlJustPressed(0, 38) then
-        if self.typ == 'enter' then
+        if self.typ == 'door_outside' then
             showEntranceHeaderMenu(self.aptId)
-        elseif self.typ == 'leave' then
+        elseif self.typ == 'door_inside' then
             showExitHeaderMenu()
         elseif self.typ == 'open_stash' then
             TriggerEvent('apartments:client:OpenStash', currentApartment)
@@ -102,7 +102,7 @@ local function createEntrances()
             inside = isInside,
             onEnter = onEnter,
             onExit = onExit,
-            typ = 'enter',
+            typ = 'door_outside',
             aptId = id
         })
     end
@@ -123,7 +123,7 @@ local function createInsidePoints(id, data)
         inside = isInside,
         onEnter = onEnter,
         onExit = onExit,
-        typ = 'leave',
+        typ = 'door_inside',
         aptId = id
     })
 
@@ -137,6 +137,7 @@ local function createInsidePoints(id, data)
         typ = 'open_stash',
         aptId = id
     })
+
     apartmentZones[id].clothes = lib.zones.sphere({
         coords = vector3(Apartments.Locations[currentApartment].enter.x - data.clothes.x, Apartments.Locations[currentApartment].enter.y - data.clothes.y, Apartments.Locations[currentApartment].enter.z - currentOffset + data.clothes.z),
         radius = 1.0,
@@ -147,6 +148,7 @@ local function createInsidePoints(id, data)
         typ = 'change_outfit',
         aptId = id
     })
+
     apartmentZones[id].logout = lib.zones.sphere({
         coords = vector3(Apartments.Locations[currentApartment].enter.x - data.logout.x, Apartments.Locations[currentApartment].enter.y + data.logout.y, Apartments.Locations[currentApartment].enter.z - currentOffset + data.logout.z),
         radius = 1.0,
@@ -228,6 +230,7 @@ local function menuOwners()
         lib.hideContext(false)
     else
         local aptsMenu = {}
+
         for k, v in pairs(apartments) do
             aptsMenu[#aptsMenu+1] = {
                 title = v,
@@ -241,38 +244,39 @@ local function menuOwners()
             title = Lang:t('text.tennants'),
             options = aptsMenu
         })
+
         lib.showContext('apartment_tennants_context_menu')
     end
 end
 
 local function exitApartment()
     -- Sound effect
-        TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_open", 0.1)
+    TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_open", 0.1)
     -- Screen anim
-        openHouseAnim()
-        DoScreenFadeOut(500)
-        while not IsScreenFadedOut() do Wait(10) end
-        -- Despawn Interior
-        exports['qbx-interior']:DespawnInterior(houseObj, function()
-            -- EnableSync
-            TriggerEvent('qb-weathersync:client:EnableSync')
-            -- Teleport PLayer outside
-            local coord = Apartments.Locations[currentApartment].enter
-            SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
-            SetEntityHeading(cache.ped, coord.w)
-            Wait(1000)
-            TriggerServerEvent("apartments:server:RemoveObject", currentApartmentId, currentApartment)
-            TriggerServerEvent('qb-apartments:server:SetInsideMeta', currentApartmentId, false)
-            currentOffset = 0
-            DoScreenFadeIn(1000)
-            TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
-            TriggerServerEvent("apartments:server:setCurrentApartment", nil)
-            -- Remove Inside Points
-            removeInsidePoints(currentApartment)
-            -- Reset
-            houseObj, poiOffsets = {}, {}
-            currentApartment, currentApartmentId = nil, nil
-        end)
+    openHouseAnim()
+    DoScreenFadeOut(500)
+    while not IsScreenFadedOut() do Wait(10) end
+    -- Despawn Interior
+    exports['qbx-interior']:DespawnInterior(houseObj, function()
+        -- EnableSync
+        TriggerEvent('qb-weathersync:client:EnableSync')
+        -- Teleport PLayer outside
+        local coord = Apartments.Locations[currentApartment].enter
+        SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
+        SetEntityHeading(cache.ped, coord.w - 178.9)
+        Wait(1000)
+        TriggerServerEvent("apartments:server:RemoveObject", currentApartmentId, currentApartment)
+        TriggerServerEvent('qb-apartments:server:SetInsideMeta', currentApartmentId, false)
+        currentOffset = 0
+        DoScreenFadeIn(1000)
+        TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
+        TriggerServerEvent("apartments:server:setCurrentApartment", nil)
+        -- Remove Inside Points
+        removeInsidePoints(currentApartment)
+        -- Reset
+        houseObj, poiOffsets = {}, {}
+        currentApartment, currentApartmentId = nil, nil
+    end)
 end
 
 local function loggedIn()
