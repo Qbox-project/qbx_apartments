@@ -6,7 +6,7 @@ Apartments.SpawnOffset = 30
 Apartments.Locations = {
     ["apartment1"] = {
         label = "South Rockford Drive",
-        enter = vector4(-667.02, -1105.24, 14.63, 242.32)63.42
+        enter = vector4(-667.02, -1105.24, 14.63, 242.32)
     },
     ["apartment2"] = {
         label = "Morningwood Blvd",
