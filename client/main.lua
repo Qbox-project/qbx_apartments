@@ -445,17 +445,3 @@ end)
 AddStateBagChangeHandler('isLoggedIn', _, function(_bagName, _key, value, _reserved, _replicated)
     if value then loggedIn() else loggedOff() end
 end)
-
--- QB Spawn
-RegisterNetEvent('apartments:client:setupSpawnUI', function(cData)
-    local result = lib.callback.await('apartments:GetOwnedApartment', false, cData.citizenid)
-    if result then
-        TriggerEvent('qb-spawn:client:setupSpawns', cData, false, nil)
-        TriggerEvent("apartments:client:SetHomeBlip", result.type)
-    elseif Apartments.Starting then
-        TriggerEvent('qb-spawn:client:setupSpawns', cData, true, Apartments.Locations)
-    else
-        TriggerEvent('qb-spawn:client:setupSpawns', cData, false, nil)
-    end
-    TriggerEvent('qb-spawn:client:openUI', true)
-end)
