@@ -4,24 +4,28 @@ Apartments.Weight = 200
 Apartments.Starting = true
 Apartments.SpawnOffset = 30
 Apartments.Locations = {
-    ["apartment1"] = {
-        label = "South Rockford Drive",
-        enter = vector4(-667.02, -1105.24, 14.63, 242.32)
+    ['DelPerroHeightsApt4'] = {
+        label = 'Del Perro Heights Apt',
+        enter = vector4(-1447.35, -537.84, 34.74, 213.73)
     },
-    ["apartment2"] = {
-        label = "Morningwood Blvd",
-        enter = vector4(-1288.52, -430.51, 35.15, 124.81)
+    ['DelPerroHeightsApt7'] = {
+        label = 'Del Perro Heights Apt',
+        enter = vector4(-1447.35, -537.84, 34.74, 213.73)
     },
-    ["apartment3"] = {
-        label = "Integrity Way",
-        enter = vector4(269.73, -640.75, 42.02, 249.07)
+    ['4IntegrityWayApt28'] = {
+        label = '4 Integrity Way Apt',
+        enter = vector4(-59.4, -616.29, 37.36, 66.94)
     },
-    ["apartment4"] = {
-        label = "Tinsel Towers",
-        enter = vector4(-619.29, 37.69, 43.59, 181.03)
+    ['4IntegrityWayApt30'] = {
+        label = '4 Integrity Way Apt',
+        enter = vector4(-47.52, -585.86, 37.95, 68.52)
     },
-    ["apartment5"] = {
-        label = "Fantastic Plaza",
-        enter = vector4(291.517, -1078.674, 29.405, 270.75)
+    ['RichardMajesticApt2'] = {
+        label = 'Richard Majestic Apt',
+        enter = vector4(-47.52, -585.86, 37.95, 68.52)
+    },
+    ['TinselTowersApt42'] = {
+        label = 'Tinsel Towers Apt',
+        enter = vector4(-777.0, 319.08, 85.66, 176.92)
     },
 }

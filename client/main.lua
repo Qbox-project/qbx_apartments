@@ -171,7 +171,6 @@ end
 local function enterApartment(house, apartmentId, new)
     currentApartmentId = apartmentId
     currentApartment = house
-
     TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_open", 0.1)
     openHouseAnim()
     local offset = lib.callback.await('apartments:GetApartmentOffset', false, apartmentId)
@@ -392,7 +391,7 @@ end)
 RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apartment, ownerCid)
     local pos = GetEntityCoords(cache.ped)
     local new = true
-    
+
     if rangDoorbell then
         new = false
         local doorbelldist = #(pos - Apartments.Locations[rangDoorbell].enter.xyz)
