@@ -7,6 +7,7 @@ version '2.1.0'
 shared_scripts {
     '@qbx-core/shared/locale.lua',
     '@ox_lib/init.lua',
+    '@qbx_core/import.lua',
     'config.lua',
     'locales/en.lua',
     'locales/*.lua',
@@ -21,10 +22,16 @@ client_scripts {
     'client/main.lua'
 }
 
+modules {
+    'qbx_core:core',
+    'qbx_core:utils'
+}
+
+
 dependencies {
     'ox_lib',
     'ox_inventory',
-    'qbx-core',
+    'qbx_core',
     'qbx-interior',
     'qbx-weathersync',
 }

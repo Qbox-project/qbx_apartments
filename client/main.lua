@@ -1,4 +1,3 @@
-local QBCore = exports['qbx-core']:GetCoreObject()
 local apartmentZones = {}
 local houseObj = {}
 local poiOffsets = {}
@@ -226,7 +225,7 @@ end
 local function menuOwners()
     local apartments = lib.callback.await('apartments:GetAvailableApartments', false, currentEntrance)
     if not next(apartments) then
-        QBCore.Functions.Notify(Lang:t('error.nobody_home'), "error", 3500)
+        QBX.Functions.Notify(Lang:t('error.nobody_home'), "error", 3500)
         lib.hideContext(false)
     else
         local aptsMenu = {}
@@ -339,12 +338,12 @@ end)
 RegisterNetEvent('apartments:client:RingDoor', function(player, _)
     currentDoorBell = player
     TriggerServerEvent("InteractSound_SV:PlayOnSource", "doorbell", 0.1)
-    QBCore.Functions.Notify(Lang:t('info.at_the_door'))
+    QBX.Functions.Notify(Lang:t('info.at_the_door'))
 end)
 
 RegisterNetEvent('apartments:client:OpenDoor', function()
     if currentDoorBell == 0 then
-        QBCore.Functions.Notify(Lang:t('error.nobody_at_door'))
+        QBX.Functions.Notify(Lang:t('error.nobody_at_door'))
         return
     end
     TriggerServerEvent("apartments:server:OpenDoor", currentDoorBell, currentApartmentId, currentEntrance)
@@ -397,7 +396,7 @@ RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apa
         new = false
         local doorbelldist = #(pos - Apartments.Locations[rangDoorbell].enter.xyz)
         if doorbelldist > 5 then
-            QBCore.Functions.Notify(Lang:t('error.to_far_from_door'))
+            QBX.Functions.Notify(Lang:t('error.to_far_from_door'))
             return
         end
     end
