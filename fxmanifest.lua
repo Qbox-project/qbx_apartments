@@ -1,11 +1,11 @@
 fx_version 'cerulean'
 game 'gta5'
 
-description 'QBX-Apartments'
+description 'QBX_Apartments'
 version '2.1.0'
 
 shared_scripts {
-    '@qbx-core/shared/locale.lua',
+    '@qbx_core/shared/locale.lua',
     '@ox_lib/init.lua',
     '@qbx_core/import.lua',
     'config.lua',
@@ -32,8 +32,8 @@ dependencies {
     'ox_lib',
     'ox_inventory',
     'qbx_core',
-    'qbx-interior',
-    'qbx-weathersync',
+    'qbx_interior',
+    'qbx_weathersync',
 }
 
 lua54 'yes'
