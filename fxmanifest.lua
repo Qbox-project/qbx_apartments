@@ -23,7 +23,6 @@ client_scripts {
 }
 
 modules {
-    'qbx_core:core',
     'qbx_core:utils'
 }
 
