@@ -5,7 +5,7 @@ description 'QBX-Apartments'
 version '2.1.0'
 
 shared_scripts {
-    '@qbx-core/shared/locale.lua',
+    '@qbx_core/shared/locale.lua',
     '@ox_lib/init.lua',
     '@qbx_core/import.lua',
     'config.lua',
@@ -23,7 +23,7 @@ client_scripts {
 }
 
 modules {
-    'qbx_core:core',
+    'qbx_core:playerdata',
     'qbx_core:utils'
 }
 
