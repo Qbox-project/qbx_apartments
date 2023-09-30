@@ -188,9 +188,9 @@ local function enterApartment(house, apartmentId, new)
             poiOffsets = data[2]
             rangDoorbell = false
             Wait(500)
-            TriggerEvent('qb-weathersync:client:DisableSync')
+            TriggerEvent('qbx_weathersync:client:DisableSync')
             Wait(100)
-            TriggerServerEvent('qb-apartments:server:SetInsideMeta', house, apartmentId, true, false)
+            TriggerServerEvent('qbx_apartments:server:SetInsideMeta', house, apartmentId, true, false)
             TriggerServerEvent("apartments:server:setCurrentApartment", apartmentId)
             createInsidePoints(house, poiOffsets)
         end, house)
@@ -207,9 +207,9 @@ local function enterApartment(house, apartmentId, new)
         houseObj = data[1]
         poiOffsets = data[2]
         Wait(500)
-        TriggerEvent('qb-weathersync:client:DisableSync')
+        TriggerEvent('qbx_weathersync:client:DisableSync')
         Wait(100)
-        TriggerServerEvent('qb-apartments:server:SetInsideMeta', house, apartmentId, true, true)
+        TriggerServerEvent('qbx_apartments:server:SetInsideMeta', house, apartmentId, true, true)
         TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
         TriggerServerEvent("apartments:server:setCurrentApartment", apartmentId)
         createInsidePoints(house, poiOffsets)
@@ -217,7 +217,7 @@ local function enterApartment(house, apartmentId, new)
 
     if new then
         SetTimeout(1250, function()
-            TriggerEvent('qb-clothes:client:CreateFirstCharacter')
+            TriggerEvent('qbx_clothes:client:CreateFirstCharacter')
         end)
     end
 end
@@ -258,14 +258,14 @@ local function exitApartment()
     -- Despawn Interior
     exports['qbx-interior']:DespawnInterior(houseObj, function()
         -- EnableSync
-        TriggerEvent('qb-weathersync:client:EnableSync')
+        TriggerEvent('qbx_weathersync:client:EnableSync')
         -- Teleport PLayer outside
         local coord = Apartments.Locations[currentApartment].enter
         SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
         SetEntityHeading(cache.ped, coord.w - 178.9)
         Wait(1000)
         TriggerServerEvent("apartments:server:RemoveObject", currentApartmentId, currentApartment)
-        TriggerServerEvent('qb-apartments:server:SetInsideMeta', currentApartmentId, false)
+        TriggerServerEvent('qbx_apartments:server:SetInsideMeta', currentApartmentId, false)
         currentOffset = 0
         DoScreenFadeIn(1000)
         TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
@@ -292,7 +292,7 @@ local function loggedOff()
     -- Despawn Interior
     exports['qbx-interior']:DespawnInterior(houseObj, function()
     -- EnableSync
-    TriggerEvent('qb-weathersync:client:EnableSync')
+    TriggerEvent('qbx_weathersync:client:EnableSync')
     -- Teleport PLayer outside
     local coord = Apartments.Locations[currentApartment].enter
     SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
@@ -377,11 +377,11 @@ end)
 
 RegisterNetEvent('apartments:client:ChangeOutfit', function()
     TriggerServerEvent("InteractSound_SV:PlayOnSource", "Clothes1", 0.4)
-    TriggerEvent('qb-clothing:client:openOutfitMenu')
+    TriggerEvent('qbx_clothing:client:openOutfitMenu')
 end)
 
 RegisterNetEvent('apartments:client:Logout', function()
-    TriggerServerEvent('qb-houses:server:LogoutLocation')
+    TriggerServerEvent('qbx_houses:server:LogoutLocation')
 end)
 
 RegisterNetEvent('apartments:client:OpenStash', function(apId)
@@ -407,7 +407,7 @@ RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apa
     isOwned = true
 end)
 
-RegisterNetEvent('qb-apartments:client:LastLocationHouse', function(apartmentType, apartmentId)
+RegisterNetEvent('qbx_apartments:client:LastLocationHouse', function(apartmentType, apartmentId)
     currentApartmentId = apartmentType
     currentApartment = apartmentType
     enterApartment(apartmentType, apartmentId, false)
@@ -424,8 +424,8 @@ AddEventHandler('onResourceStop', function(resource)
     removeEntrances()
     if next(houseObj) then
         exports['qbx-interior']:DespawnInterior(houseObj, function()
-            TriggerEvent('qb-weathersync:client:EnableSync')
-            TriggerServerEvent("qb-apartments:returnBucket")
+            TriggerEvent('qbx_weathersync:client:EnableSync')
+            TriggerServerEvent("qbx_apartments:returnBucket")
             DoScreenFadeIn(500)
             DoScreenFadeIn(1000)
         end)
@@ -437,7 +437,7 @@ AddEventHandler('onResourceStop', function(resource)
         houseObj, poiOffsets = {}, {}
         currentApartment, currentApartmentId = nil, nil
         currentOffset = 0
-        TriggerServerEvent('qb-apartments:returnBucket')
+        TriggerServerEvent('qbx_apartments:returnBucket')
     end
 end)
 
@@ -449,12 +449,12 @@ end)
 RegisterNetEvent('apartments:client:setupSpawnUI', function(cData)
     local result = lib.callback.await('apartments:GetOwnedApartment', false, cData.citizenid)
     if result then
-        TriggerEvent('qb-spawn:client:setupSpawns', cData, false, nil)
+        TriggerEvent('qbx_spawn:client:setupSpawns', cData, false, nil)
         TriggerEvent("apartments:client:SetHomeBlip", result.type)
     elseif Apartments.Starting then
-        TriggerEvent('qb-spawn:client:setupSpawns', cData, true, Apartments.Locations)
+        TriggerEvent('qbx_spawn:client:setupSpawns', cData, true, Apartments.Locations)
     else
-        TriggerEvent('qb-spawn:client:setupSpawns', cData, false, nil)
+        TriggerEvent('qbx_spawn:client:setupSpawns', cData, false, nil)
     end
-    TriggerEvent('qb-spawn:client:openUI', true)
+    TriggerEvent('qbx_spawn:client:openUI', true)
 end)
