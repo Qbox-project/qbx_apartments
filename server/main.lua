@@ -18,7 +18,7 @@ end
 
 -- Events
 
-RegisterNetEvent('qb-apartments:server:SetInsideMeta', function(house, insideId, bool, isVisiting)
+RegisterNetEvent('qbx_apartments:server:SetInsideMeta', function(house, insideId, bool, isVisiting)
     local src = source
     local player = exports.qbx_core:GetPlayer(src)
     local insideMeta = player.PlayerData.metadata.inside
@@ -42,7 +42,7 @@ RegisterNetEvent('qb-apartments:server:SetInsideMeta', function(house, insideId,
     end
 end)
 
-RegisterNetEvent('qb-apartments:returnBucket', function()
+RegisterNetEvent('qbx_apartments:returnBucket', function()
     SetPlayerRoutingBucket(source, 0)
 end)
 
