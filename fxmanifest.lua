@@ -32,8 +32,8 @@ dependencies {
     'ox_lib',
     'ox_inventory',
     'qbx_core',
-    'qbx-interior',
-    'qbx-weathersync',
+    'qbx_interior',
+    'qbx_weathersync',
 }
 
 lua54 'yes'
