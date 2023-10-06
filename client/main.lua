@@ -182,7 +182,7 @@ local function enterApartment(house, apartmentId, new)
             currentOffset = newoffset
             TriggerServerEvent("apartments:server:AddObject", apartmentId, house, currentOffset)
             local coords = Apartments.Locations[house].enter.xyz - vec3(0, 0, currentOffset)
-            local data = exports['qbx-interior']:CreateApartmentFurnished(coords)
+            local data = exports.qbx_interior:CreateApartmentFurnished(coords)
             Wait(100)
             houseObj = data[1]
             poiOffsets = data[2]
@@ -202,7 +202,7 @@ local function enterApartment(house, apartmentId, new)
         TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_open", 0.1)
         TriggerServerEvent("apartments:server:AddObject", apartmentId, house, currentOffset)
         local coords = Apartments.Locations[house].enter.xyz - vec3(0, 0, currentOffset)
-        local data = exports['qbx-interior']:CreateApartmentFurnished(coords)
+        local data = exports.qbx_interior:CreateApartmentFurnished(coords)
         Wait(100)
         houseObj = data[1]
         poiOffsets = data[2]
@@ -225,7 +225,7 @@ end
 local function menuOwners()
     local apartments = lib.callback.await('apartments:GetAvailableApartments', false, currentEntrance)
     if not next(apartments) then
-        QBX.Functions.Notify(Lang:t('error.nobody_home'), "error", 3500)
+        exports.qbx_core:Notify(Lang:t('error.nobody_home'), "error", 3500)
         lib.hideContext(false)
     else
         local aptsMenu = {}
@@ -256,7 +256,7 @@ local function exitApartment()
     DoScreenFadeOut(500)
     while not IsScreenFadedOut() do Wait(10) end
     -- Despawn Interior
-    exports['qbx-interior']:DespawnInterior(houseObj, function()
+    exports.qbx_interior:DespawnInterior(houseObj, function()
         -- EnableSync
         TriggerEvent('qb-weathersync:client:EnableSync')
         -- Teleport PLayer outside
@@ -290,7 +290,7 @@ local function loggedOff()
     -- Remove Inside Points
     removeInsidePoints(currentApartment)
     -- Despawn Interior
-    exports['qbx-interior']:DespawnInterior(houseObj, function()
+    exports.qbx_interior:DespawnInterior(houseObj, function()
     -- EnableSync
     TriggerEvent('qb-weathersync:client:EnableSync')
     -- Teleport PLayer outside
@@ -338,12 +338,12 @@ end)
 RegisterNetEvent('apartments:client:RingDoor', function(player, _)
     currentDoorBell = player
     TriggerServerEvent("InteractSound_SV:PlayOnSource", "doorbell", 0.1)
-    QBX.Functions.Notify(Lang:t('info.at_the_door'))
+    exports.qbx_core:Notify(Lang:t('info.at_the_door'))
 end)
 
 RegisterNetEvent('apartments:client:OpenDoor', function()
     if currentDoorBell == 0 then
-        QBX.Functions.Notify(Lang:t('error.nobody_at_door'))
+        exports.qbx_core:Notify(Lang:t('error.nobody_at_door'))
         return
     end
     TriggerServerEvent("apartments:server:OpenDoor", currentDoorBell, currentApartmentId, currentEntrance)
@@ -396,7 +396,7 @@ RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apa
         new = false
         local doorbelldist = #(pos - Apartments.Locations[rangDoorbell].enter.xyz)
         if doorbelldist > 5 then
-            QBX.Functions.Notify(Lang:t('error.to_far_from_door'))
+            exports.qbx_core:Notify(Lang:t('error.to_far_from_door'))
             return
         end
     end
@@ -423,7 +423,7 @@ AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
     removeEntrances()
     if next(houseObj) then
-        exports['qbx-interior']:DespawnInterior(houseObj, function()
+        exports.qbx_interior:DespawnInterior(houseObj, function()
             TriggerEvent('qb-weathersync:client:EnableSync')
             TriggerServerEvent("qb-apartments:returnBucket")
             DoScreenFadeIn(500)
