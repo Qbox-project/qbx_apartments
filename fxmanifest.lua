@@ -2,6 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 
 description 'QBX-Apartments'
+repository 'https://github.com/Qbox-project/qbx_apartments'
 version '2.1.0'
 
 shared_scripts {
@@ -27,7 +28,6 @@ modules {
     'qbx_core:utils'
 }
 
-
 dependencies {
     'ox_lib',
     'ox_inventory',
@@ -37,3 +37,4 @@ dependencies {
 }
 
 lua54 'yes'
+use_experimental_fxv2_oal 'yes'

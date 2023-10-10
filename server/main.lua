@@ -20,7 +20,7 @@ end
 
 RegisterNetEvent('qb-apartments:server:SetInsideMeta', function(house, insideId, bool, isVisiting)
     local src = source
-    local player = QBX.Functions.GetPlayer(src)
+    local player = exports.qbx_core:GetPlayer(src)
     local insideMeta = player.PlayerData.metadata.inside
 
     if bool then
@@ -31,14 +31,14 @@ RegisterNetEvent('qb-apartments:server:SetInsideMeta', function(house, insideId,
             insideMeta.house = nil
             player.Functions.SetMetaData("inside", insideMeta)
         end
-        QBX.Functions.SetPlayerBucket(src, tonumber(routeId))
+        exports.qbx_core:SetPlayerBucket(src, tonumber(routeId))
     else
         insideMeta.apartment.apartmentType = nil
         insideMeta.apartment.apartmentId = nil
         insideMeta.house = nil
 
         player.Functions.SetMetaData("inside", insideMeta)
-        QBX.Functions.SetPlayerBucket(src, 0)
+        exports.qbx_core:SetPlayerBucket(src, 0)
     end
 end)
 
@@ -48,7 +48,7 @@ end)
 
 RegisterNetEvent('apartments:server:CreateApartment', function(type, label)
     local src = source
-    local player = QBX.Functions.GetPlayer(src)
+    local player = exports.qbx_core:GetPlayer(src)
     local num = createApartmentId(type)
     local apartmentId = type .. num
     label = label .. " " .. num
@@ -58,16 +58,16 @@ RegisterNetEvent('apartments:server:CreateApartment', function(type, label)
         label,
         player.PlayerData.citizenid
     })
-    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.receive_apart').." ("..label..")")
+    exports.qbx_core:Notify(src, Lang:t('success.receive_apart').." ("..label..")")
     TriggerClientEvent("apartments:client:SpawnInApartment", src, apartmentId, type)
     TriggerClientEvent("apartments:client:SetHomeBlip", src, type)
 end)
 
 RegisterNetEvent('apartments:server:UpdateApartment', function(type, label)
     local src = source
-    local player = QBX.Functions.GetPlayer(src)
+    local player = exports.qbx_core:GetPlayer(src)
     MySQL.update('UPDATE apartments SET type = ?, label = ? WHERE citizenid = ?', { type, label, player.PlayerData.citizenid })
-    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.changed_apart'))
+    exports.qbx_core:Notify(src, Lang:t('success.changed_apart'))
     TriggerClientEvent("apartments:client:SetHomeBlip", src, type)
 end)
 
@@ -82,8 +82,8 @@ RegisterNetEvent('apartments:server:RingDoor', function(apartmentId, apartment)
 end)
 
 RegisterNetEvent('apartments:server:OpenDoor', function(target, apartmentId, apartment)
-    local otherPlayer = QBX.Functions.GetPlayer(target)
-    local ownerPlayer = QBX.Functions.GetPlayer(source) -- Aki be enged
+    local otherPlayer = exports.qbx_core:GetPlayer(target)
+    local ownerPlayer = exports.qbx_core:GetPlayer(source) -- Aki be enged
     if otherPlayer then
         TriggerClientEvent('apartments:client:SpawnInApartment', otherPlayer.PlayerData.source, apartmentId, apartment, ownerPlayer.PlayerData.citizenid)
     end
@@ -91,7 +91,7 @@ end)
 
 RegisterNetEvent('apartments:server:AddObject', function(apartmentId, apartment, offset)
     local src = source
-    local player = QBX.Functions.GetPlayer(src)
+    local player = exports.qbx_core:GetPlayer(src)
     local apartmentObj = ApartmentObjects[apartment]
 
     if not apartmentObj then
@@ -123,7 +123,7 @@ RegisterNetEvent('apartments:server:RemoveObject', function(apartmentId, apartme
 end)
 
 RegisterNetEvent('apartments:server:setCurrentApartment', function(ap)
-    local player = QBX.Functions.GetPlayer(source)
+    local player = exports.qbx_core:GetPlayer(source)
 
     if not player then return end
     player.Functions.SetMetaData('currentapartment', ap)
@@ -173,7 +173,7 @@ end)
 
 lib.callback.register('apartments:GetOwnedApartment', function(source, cid)
     if not cid then
-        local player = QBX.Functions.GetPlayer(source)
+        local player = exports.qbx_core:GetPlayer(source)
         cid = player.PlayerData.citizenid
     end
 
@@ -184,7 +184,7 @@ lib.callback.register('apartments:GetOwnedApartment', function(source, cid)
 end)
 
 lib.callback.register('apartments:IsOwner', function(source, apartment)
-    local player = QBX.Functions.GetPlayer(source)
+    local player = exports.qbx_core:GetPlayer(source)
     if not player then return end
 
     local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { player.PlayerData.citizenid })
