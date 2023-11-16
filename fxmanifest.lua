@@ -1,31 +1,27 @@
 fx_version 'cerulean'
 game 'gta5'
 
-description 'QBX-Apartments'
+description 'QBX_Apartments'
 repository 'https://github.com/Qbox-project/qbx_apartments'
 version '2.1.0'
 
 shared_scripts {
-    '@qbx_core/shared/locale.lua',
     '@ox_lib/init.lua',
-    '@qbx_core/import.lua',
-    'config.lua',
+    '@qbx_core/modules/utils.lua',
+    '@qbx_core/shared/locale.lua',
     'locales/en.lua',
     'locales/*.lua',
+    'config.lua',
+}
+
+client_scripts {
+    '@qbx_core/modules/playerdata.lua',
+    'client/main.lua'
 }
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'server/main.lua'
-}
-
-client_scripts {
-    'client/main.lua'
-}
-
-modules {
-    'qbx_core:playerdata',
-    'qbx_core:utils'
 }
 
 dependencies {
