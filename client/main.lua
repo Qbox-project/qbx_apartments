@@ -8,6 +8,7 @@ local currentApartment = nil
 local currentApartmentId = nil
 local currentEntrance = nil
 local currentDoorBell = 0
+local playerState = LocalPlayer.state
 
 -- Functions
 local function openHouseAnim()
@@ -188,7 +189,7 @@ local function enterApartment(house, apartmentId, new)
             poiOffsets = data[2]
             rangDoorbell = false
             Wait(500)
-            TriggerEvent('qb-weathersync:client:DisableSync')
+            playerState.syncWeather = false
             Wait(100)
             TriggerServerEvent('qb-apartments:server:SetInsideMeta', house, apartmentId, true, false)
             TriggerServerEvent("apartments:server:setCurrentApartment", apartmentId)
@@ -207,7 +208,7 @@ local function enterApartment(house, apartmentId, new)
         houseObj = data[1]
         poiOffsets = data[2]
         Wait(500)
-        TriggerEvent('qb-weathersync:client:DisableSync')
+        playerState.syncWeather = false
         Wait(100)
         TriggerServerEvent('qb-apartments:server:SetInsideMeta', house, apartmentId, true, true)
         TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_close", 0.1)
@@ -258,7 +259,7 @@ local function exitApartment()
     -- Despawn Interior
     exports.qbx_interior:DespawnInterior(houseObj, function()
         -- EnableSync
-        TriggerEvent('qb-weathersync:client:EnableSync')
+        playerState.syncWeather = true
         -- Teleport PLayer outside
         local coord = Apartments.Locations[currentApartment].enter
         SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
@@ -292,7 +293,7 @@ local function loggedOff()
     -- Despawn Interior
     exports.qbx_interior:DespawnInterior(houseObj, function()
     -- EnableSync
-    TriggerEvent('qb-weathersync:client:EnableSync')
+    playerState.syncWeather = true
     -- Teleport PLayer outside
     local coord = Apartments.Locations[currentApartment].enter
     SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
@@ -415,7 +416,7 @@ end)
 
 -- Handlers
 AddEventHandler('onResourceStart', function(resourceName)
-    if GetCurrentResourceName() ~= resourceName or not LocalPlayer.state.isLoggedIn then return end
+    if GetCurrentResourceName() ~= resourceName or not playerState.isLoggedIn then return end
     loggedIn()
 end)
 
@@ -424,7 +425,7 @@ AddEventHandler('onResourceStop', function(resource)
     removeEntrances()
     if next(houseObj) then
         exports.qbx_interior:DespawnInterior(houseObj, function()
-            TriggerEvent('qb-weathersync:client:EnableSync')
+            playerState.syncWeather = true
             TriggerServerEvent("qb-apartments:returnBucket")
             DoScreenFadeIn(500)
             DoScreenFadeIn(1000)
