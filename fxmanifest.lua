@@ -29,7 +29,7 @@ dependencies {
     'ox_inventory',
     'qbx_core',
     'qbx_interior',
-    'qbx_weathersync',
+    'Renewed-Weathersync',
 }
 
 lua54 'yes'
