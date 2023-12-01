@@ -1,3 +1,5 @@
+local config = require 'config.client'
+local sharedConfig = require 'config.shared'
 local apartmentZones = {}
 local houseObj = {}
 local poiOffsets = {}
@@ -93,7 +95,7 @@ local function isInside(self)
 end
 
 local function createEntrances()
-    for id, data in pairs(Apartments.Locations) do
+    for id, data in pairs(sharedConfig.locations) do
         apartmentZones[id] = {}
         apartmentZones[id].enterance = lib.zones.sphere({
             coords = data.enter.xyz,
@@ -117,7 +119,7 @@ end
 
 local function createInsidePoints(id, data)
     apartmentZones[id].exit = lib.zones.sphere({
-        coords = vector3(Apartments.Locations[currentApartment].enter.x - data.exit.x, Apartments.Locations[currentApartment].enter.y - data.exit.y - 0.5, Apartments.Locations[currentApartment].enter.z - currentOffset + data.exit.z),
+        coords = vector3(sharedConfig.locations[currentApartment].enter.x - data.exit.x, sharedConfig.locations[currentApartment].enter.y - data.exit.y - 0.5, sharedConfig.locations[currentApartment].enter.z - currentOffset + data.exit.z),
         radius = 1.0,
         debug = false,
         inside = isInside,
@@ -128,7 +130,7 @@ local function createInsidePoints(id, data)
     })
 
     apartmentZones[id].stash = lib.zones.sphere({
-        coords = vector3(Apartments.Locations[currentApartment].enter.x - data.stash.x, Apartments.Locations[currentApartment].enter.y - data.stash.y, Apartments.Locations[currentApartment].enter.z - currentOffset + data.stash.z),
+        coords = vector3(sharedConfig.locations[currentApartment].enter.x - data.stash.x, sharedConfig.locations[currentApartment].enter.y - data.stash.y, sharedConfig.locations[currentApartment].enter.z - currentOffset + data.stash.z),
         radius = 1.0,
         debug = false,
         inside = isInside,
@@ -139,7 +141,7 @@ local function createInsidePoints(id, data)
     })
 
     apartmentZones[id].clothes = lib.zones.sphere({
-        coords = vector3(Apartments.Locations[currentApartment].enter.x - data.clothes.x, Apartments.Locations[currentApartment].enter.y - data.clothes.y, Apartments.Locations[currentApartment].enter.z - currentOffset + data.clothes.z),
+        coords = vector3(sharedConfig.locations[currentApartment].enter.x - data.clothes.x, sharedConfig.locations[currentApartment].enter.y - data.clothes.y, sharedConfig.locations[currentApartment].enter.z - currentOffset + data.clothes.z),
         radius = 1.0,
         debug = false,
         inside = isInside,
@@ -150,7 +152,7 @@ local function createInsidePoints(id, data)
     })
 
     apartmentZones[id].logout = lib.zones.sphere({
-        coords = vector3(Apartments.Locations[currentApartment].enter.x - data.logout.x, Apartments.Locations[currentApartment].enter.y + data.logout.y, Apartments.Locations[currentApartment].enter.z - currentOffset + data.logout.z),
+        coords = vector3(sharedConfig.locations[currentApartment].enter.x - data.logout.x, sharedConfig.locations[currentApartment].enter.y + data.logout.y, sharedConfig.locations[currentApartment].enter.z - currentOffset + data.logout.z),
         radius = 1.0,
         debug = false,
         inside = isInside,
@@ -182,7 +184,7 @@ local function enterApartment(house, apartmentId, new)
             end
             currentOffset = newoffset
             TriggerServerEvent("apartments:server:AddObject", apartmentId, house, currentOffset)
-            local coords = Apartments.Locations[house].enter.xyz - vec3(0, 0, currentOffset)
+            local coords = sharedConfig.locations[house].enter.xyz - vec3(0, 0, currentOffset)
             local data = exports.qbx_interior:CreateApartmentFurnished(coords)
             Wait(100)
             houseObj = data[1]
@@ -202,7 +204,7 @@ local function enterApartment(house, apartmentId, new)
         currentOffset = offset
         TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_open", 0.1)
         TriggerServerEvent("apartments:server:AddObject", apartmentId, house, currentOffset)
-        local coords = Apartments.Locations[house].enter.xyz - vec3(0, 0, currentOffset)
+        local coords = sharedConfig.locations[house].enter.xyz - vec3(0, 0, currentOffset)
         local data = exports.qbx_interior:CreateApartmentFurnished(coords)
         Wait(100)
         houseObj = data[1]
@@ -261,7 +263,7 @@ local function exitApartment()
         -- EnableSync
         playerState.syncWeather = true
         -- Teleport PLayer outside
-        local coord = Apartments.Locations[currentApartment].enter
+        local coord = sharedConfig.locations[currentApartment].enter
         SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
         SetEntityHeading(cache.ped, coord.w - 178.9)
         Wait(1000)
@@ -295,7 +297,7 @@ local function loggedOff()
     -- EnableSync
     playerState.syncWeather = true
     -- Teleport PLayer outside
-    local coord = Apartments.Locations[currentApartment].enter
+    local coord = sharedConfig.locations[currentApartment].enter
     SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
     SetEntityHeading(cache.ped, coord.w)
     Wait(1000)
@@ -317,7 +319,7 @@ RegisterNetEvent('apartments:client:EnterApartment', function(id)
 end)
 
 RegisterNetEvent('apartments:client:UpdateApartment', function(id)
-    TriggerServerEvent("apartments:server:UpdateApartment", id, Apartments.Locations[id].label)
+    TriggerServerEvent("apartments:server:UpdateApartment", id, sharedConfig.locations[id].label)
     isOwned = true
 end)
 
@@ -353,25 +355,25 @@ end)
 
 RegisterNetEvent('apartments:client:SetHomeBlip', function(home)
     CreateThread(function()
-        for name, _ in pairs(Apartments.Locations) do
-            RemoveBlip(Apartments.Locations[name].blip)
+        for name, _ in pairs(sharedConfig.locations) do
+            RemoveBlip(sharedConfig.locations[name].blip)
 
-            Apartments.Locations[name].blip = AddBlipForCoord(Apartments.Locations[name].enter.x, Apartments.Locations[name].enter.y, Apartments.Locations[name].enter.z)
+            sharedConfig.locations[name].blip = AddBlipForCoord(sharedConfig.locations[name].enter.x, sharedConfig.locations[name].enter.y, sharedConfig.locations[name].enter.z)
             if (name == home) then
-                SetBlipSprite(Apartments.Locations[name].blip, 475)
-                SetBlipCategory(Apartments.Locations[name].blip, 11)
+                SetBlipSprite(sharedConfig.locations[name].blip, 475)
+                SetBlipCategory(sharedConfig.locations[name].blip, 11)
             else
-                SetBlipSprite(Apartments.Locations[name].blip, 476)
-                SetBlipCategory(Apartments.Locations[name].blip, 10)
+                SetBlipSprite(sharedConfig.locations[name].blip, 476)
+                SetBlipCategory(sharedConfig.locations[name].blip, 10)
             end
-            SetBlipDisplay(Apartments.Locations[name].blip, 4)
-            SetBlipScale(Apartments.Locations[name].blip, 0.65)
-            SetBlipAsShortRange(Apartments.Locations[name].blip, true)
-            SetBlipColour(Apartments.Locations[name].blip, 3)
+            SetBlipDisplay(sharedConfig.locations[name].blip, 4)
+            SetBlipScale(sharedConfig.locations[name].blip, 0.65)
+            SetBlipAsShortRange(sharedConfig.locations[name].blip, true)
+            SetBlipColour(sharedConfig.locations[name].blip, 3)
 
-            AddTextEntry(Apartments.Locations[name].label, Apartments.Locations[name].label)
-            BeginTextCommandSetBlipName(Apartments.Locations[name].label)
-            EndTextCommandSetBlipName(Apartments.Locations[name].blip)
+            AddTextEntry(sharedConfig.locations[name].label, sharedConfig.locations[name].label)
+            BeginTextCommandSetBlipName(sharedConfig.locations[name].label)
+            EndTextCommandSetBlipName(sharedConfig.locations[name].blip)
         end
     end)
 end)
@@ -395,7 +397,7 @@ RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apa
     
     if rangDoorbell then
         new = false
-        local doorbelldist = #(pos - Apartments.Locations[rangDoorbell].enter.xyz)
+        local doorbelldist = #(pos - sharedConfig.locations[rangDoorbell].enter.xyz)
         if doorbelldist > 5 then
             exports.qbx_core:Notify(Lang:t('error.to_far_from_door'))
             return
@@ -431,7 +433,7 @@ AddEventHandler('onResourceStop', function(resource)
             DoScreenFadeIn(1000)
         end)
 
-        local coord = Apartments.Locations[currentApartment].enter
+        local coord = sharedConfig.locations[currentApartment].enter
         SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
         SetEntityHeading(cache.ped, coord.w)
         removeInsidePoints(currentApartment)
@@ -452,8 +454,8 @@ RegisterNetEvent('apartments:client:setupSpawnUI', function(cData)
     if result then
         TriggerEvent('qb-spawn:client:setupSpawns', cData, false, nil)
         TriggerEvent("apartments:client:SetHomeBlip", result.type)
-    elseif Apartments.Starting then
-        TriggerEvent('qb-spawn:client:setupSpawns', cData, true, Apartments.Locations)
+    elseif config.starting then
+        TriggerEvent('qb-spawn:client:setupSpawns', cData, true, sharedConfig.locations)
     else
         TriggerEvent('qb-spawn:client:setupSpawns', cData, false, nil)
     end

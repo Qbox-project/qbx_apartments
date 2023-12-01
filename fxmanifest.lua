@@ -3,7 +3,7 @@ game 'gta5'
 
 description 'QBX_Apartments'
 repository 'https://github.com/Qbox-project/qbx_apartments'
-version '2.1.0'
+version '1.0.0'
 
 shared_scripts {
     '@ox_lib/init.lua',
@@ -11,7 +11,6 @@ shared_scripts {
     '@qbx_core/shared/locale.lua',
     'locales/en.lua',
     'locales/*.lua',
-    'config.lua',
 }
 
 client_scripts {
@@ -22,6 +21,11 @@ client_scripts {
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'server/main.lua'
+}
+
+files {
+	'config/client.lua',
+	'config/shared.lua',
 }
 
 dependencies {
