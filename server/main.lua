@@ -1,3 +1,5 @@
+local config = require 'config.server'
+local sharedConfig = require 'config.shared'
 local ApartmentObjects = {}
 
 -- Functions
@@ -160,13 +162,13 @@ lib.callback.register('apartments:GetApartmentOffset', function(_, apartmentId)
 end)
 
 lib.callback.register('apartments:GetApartmentOffsetNewOffset', function(_, apartment)
-    local retval = Apartments.SpawnOffset
+    local retval = config.spawnOffset
     if not ApartmentObjects or not ApartmentObjects[apartment] or not ApartmentObjects[apartment].apartments then
         return retval
     end
     local apartments = ApartmentObjects[apartment].apartments
     for _, v in pairs(apartments) do
-        retval = v.offset + Apartments.SpawnOffset
+        retval = v.offset + config.spawnOffset
     end
     return retval
 end)
@@ -198,8 +200,8 @@ end)
 -- RegisterStash
 AddEventHandler('onServerResourceStart', function(resourceName)
     if resourceName == 'ox_inventory' or resourceName == GetCurrentResourceName() then
-        for k, v in pairs(Apartments.Locations) do
-            exports.ox_inventory:RegisterStash(k, v.label, Apartments.Slot, Apartments.Weight * 1000, true)
+        for k, v in pairs(sharedConfig.locations) do
+            exports.ox_inventory:RegisterStash(k, v.label, config.slot, config.weight * 1000, true)
         end
     end
 end)
