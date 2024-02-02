@@ -36,12 +36,3 @@ if GetConvar('qb_locale', 'en') == 'cs' then
     })
 end
 --translate by stepan_valic
-
-if GetConvar('qb_locale', 'en') == 'cs' then
-    Lang = Locale:new({
-        phrases = Translations,
-        warnOnMissing = true,
-        fallbackLang = Lang,
-    })
-end
---translate by stepan_valic
