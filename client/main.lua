@@ -14,7 +14,7 @@ local playerState = LocalPlayer.state
 
 -- Functions
 local function openHouseAnim()
-    lib.requestAnimDict('anim@heists@keycard@', 100)
+    -- lib.requestAnimDict('anim@heists@keycard@', 100)
     TaskPlayAnim(cache.ped, 'anim@heists@keycard@', 'exit', 5.0, 1.0, -1, 16, 0, false, false, false)
     Wait(400)
     StopAnimTask(cache.ped, 'anim@heists@keycard@', 'exit', 1.0)
