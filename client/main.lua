@@ -14,7 +14,7 @@ local playerState = LocalPlayer.state
 
 -- Functions
 local function openHouseAnim()
-    -- lib.requestAnimDict('anim@heists@keycard@', 100)
+    lib.requestAnimDict('anim@heists@keycard@', 100)
     TaskPlayAnim(cache.ped, 'anim@heists@keycard@', 'exit', 5.0, 1.0, -1, 16, 0, false, false, false)
     Wait(400)
     StopAnimTask(cache.ped, 'anim@heists@keycard@', 'exit', 1.0)
@@ -28,12 +28,14 @@ local function showEntranceHeaderMenu(id)
         
         if isOwned then
             headerMenu[#headerMenu + 1] = {
+                icon = "fa-solid fa-door-open",
                 title = Lang:t('text.enter'),
                 event = 'apartments:client:EnterApartment',
                 args = id
             }
         elseif not isOwned then
             headerMenu[#headerMenu + 1] = {
+                icon = "fa-solid fa-boxes-packing",
                 title = Lang:t('text.move_here'),
                 event = 'apartments:client:UpdateApartment',
                 args = id
@@ -41,6 +43,7 @@ local function showEntranceHeaderMenu(id)
         end
 
         headerMenu[#headerMenu + 1] = {
+            icon = "fa-solid fa-bell",
             title = Lang:t('text.ring_doorbell'),
             event = 'apartments:client:DoorbellMenu',
         }
@@ -60,8 +63,8 @@ local function showExitHeaderMenu()
         id = 'apartment_exit_context_menu',
         title = Lang:t('text.menu_header'),
         options = {
-            { title = Lang:t('text.open_door'), event = 'apartments:client:OpenDoor', },
-            { title = Lang:t('text.leave'), event = 'apartments:client:LeaveApartment', },
+            { icon = "fa-solid fa-lock-open", title = Lang:t('text.open_door'), event = 'apartments:client:OpenDoor', },
+            { icon = "fa-solid fa-door-open", title = Lang:t('text.leave'), event = 'apartments:client:LeaveApartment', },
         }
     })
     lib.showContext('apartment_exit_context_menu')
