@@ -3,7 +3,6 @@ local sharedConfig = require 'config.shared'
 local apartmentZones = {}
 local houseObj = {}
 local poiOffsets = {}
-local isOwned = false
 local rangDoorbell = false
 local currentOffset = 0
 local currentApartment = nil
@@ -321,7 +320,6 @@ end)
 
 RegisterNetEvent('apartments:client:UpdateApartment', function(id)
     TriggerServerEvent("apartments:server:UpdateApartment", id, sharedConfig.locations[id].label)
-    isOwned = true
 end)
 
 RegisterNetEvent('apartments:client:LeaveApartment', function()
@@ -408,7 +406,6 @@ RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apa
     currentApartment = apartment
     currentApartmentId = apartmentId
     enterApartment(apartment, apartmentId, new)
-    isOwned = true
 end)
 
 RegisterNetEvent('qb-apartments:client:LastLocationHouse', function(apartmentType, apartmentId)
