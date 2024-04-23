@@ -23,7 +23,7 @@ end
 local function showEntranceHeaderMenu(id)
     local headerMenu = {}
 
-    isOwned = lib.callback.await('apartments:IsOwner', false, id)
+    local isOwned = lib.callback.await('apartments:IsOwner', false, id)
 
     if isOwned then
         headerMenu[#headerMenu + 1] = {
@@ -32,7 +32,7 @@ local function showEntranceHeaderMenu(id)
             event = 'apartments:client:EnterApartment',
             args = id
         }
-    elseif not isOwned then
+    else
         headerMenu[#headerMenu + 1] = {
             icon = "fa-solid fa-boxes-packing",
             title = Lang:t('text.move_here'),
