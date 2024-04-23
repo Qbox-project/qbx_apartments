@@ -3,7 +3,6 @@ local sharedConfig = require 'config.shared'
 local apartmentZones = {}
 local houseObj = {}
 local poiOffsets = {}
-local isOwned = false
 local rangDoorbell = false
 local currentOffset = 0
 local currentApartment = nil
@@ -23,39 +22,37 @@ end
 local function showEntranceHeaderMenu(id)
     local headerMenu = {}
 
-    lib.callback('apartments:IsOwner', false, function(result)
-        isOwned = result
-        
-        if isOwned then
-            headerMenu[#headerMenu + 1] = {
-                icon = "fa-solid fa-door-open",
-                title = Lang:t('text.enter'),
-                event = 'apartments:client:EnterApartment',
-                args = id
-            }
-        elseif not isOwned then
-            headerMenu[#headerMenu + 1] = {
-                icon = "fa-solid fa-boxes-packing",
-                title = Lang:t('text.move_here'),
-                event = 'apartments:client:UpdateApartment',
-                args = id
-            }
-        end
+    local isOwned = lib.callback.await('apartments:IsOwner', false, id)
 
+    if isOwned then
         headerMenu[#headerMenu + 1] = {
-            icon = "fa-solid fa-bell",
-            title = Lang:t('text.ring_doorbell'),
-            event = 'apartments:client:DoorbellMenu',
+            icon = "fa-solid fa-door-open",
+            title = Lang:t('text.enter'),
+            event = 'apartments:client:EnterApartment',
+            args = id
         }
+    else
+        headerMenu[#headerMenu + 1] = {
+            icon = "fa-solid fa-boxes-packing",
+            title = Lang:t('text.move_here'),
+            event = 'apartments:client:UpdateApartment',
+            args = id
+        }
+    end
 
-        lib.registerContext({
-            id = 'apartment_context_menu',
-            title = Lang:t('text.menu_header'),
-            options = headerMenu
-        })
+    headerMenu[#headerMenu + 1] = {
+        icon = "fa-solid fa-bell",
+        title = Lang:t('text.ring_doorbell'),
+        event = 'apartments:client:DoorbellMenu',
+    }
 
-        lib.showContext('apartment_context_menu')
-    end, id)
+    lib.registerContext({
+        id = 'apartment_context_menu',
+        title = Lang:t('text.menu_header'),
+        options = headerMenu
+    })
+
+    lib.showContext('apartment_context_menu')
 end
 
 local function showExitHeaderMenu()
@@ -323,7 +320,6 @@ end)
 
 RegisterNetEvent('apartments:client:UpdateApartment', function(id)
     TriggerServerEvent("apartments:server:UpdateApartment", id, sharedConfig.locations[id].label)
-    isOwned = true
 end)
 
 RegisterNetEvent('apartments:client:LeaveApartment', function()
@@ -410,7 +406,6 @@ RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apa
     currentApartment = apartment
     currentApartmentId = apartmentId
     enterApartment(apartment, apartmentId, new)
-    isOwned = true
 end)
 
 RegisterNetEvent('qb-apartments:client:LastLocationHouse', function(apartmentType, apartmentId)
