@@ -23,39 +23,37 @@ end
 local function showEntranceHeaderMenu(id)
     local headerMenu = {}
 
-    lib.callback('apartments:IsOwner', false, function(result)
-        isOwned = result
-        
-        if isOwned then
-            headerMenu[#headerMenu + 1] = {
-                icon = "fa-solid fa-door-open",
-                title = Lang:t('text.enter'),
-                event = 'apartments:client:EnterApartment',
-                args = id
-            }
-        elseif not isOwned then
-            headerMenu[#headerMenu + 1] = {
-                icon = "fa-solid fa-boxes-packing",
-                title = Lang:t('text.move_here'),
-                event = 'apartments:client:UpdateApartment',
-                args = id
-            }
-        end
+    isOwned = lib.callback.await('apartments:IsOwner', false, id)
 
+    if isOwned then
         headerMenu[#headerMenu + 1] = {
-            icon = "fa-solid fa-bell",
-            title = Lang:t('text.ring_doorbell'),
-            event = 'apartments:client:DoorbellMenu',
+            icon = "fa-solid fa-door-open",
+            title = Lang:t('text.enter'),
+            event = 'apartments:client:EnterApartment',
+            args = id
         }
+    elseif not isOwned then
+        headerMenu[#headerMenu + 1] = {
+            icon = "fa-solid fa-boxes-packing",
+            title = Lang:t('text.move_here'),
+            event = 'apartments:client:UpdateApartment',
+            args = id
+        }
+    end
 
-        lib.registerContext({
-            id = 'apartment_context_menu',
-            title = Lang:t('text.menu_header'),
-            options = headerMenu
-        })
+    headerMenu[#headerMenu + 1] = {
+        icon = "fa-solid fa-bell",
+        title = Lang:t('text.ring_doorbell'),
+        event = 'apartments:client:DoorbellMenu',
+    }
 
-        lib.showContext('apartment_context_menu')
-    end, id)
+    lib.registerContext({
+        id = 'apartment_context_menu',
+        title = Lang:t('text.menu_header'),
+        options = headerMenu
+    })
+
+    lib.showContext('apartment_context_menu')
 end
 
 local function showExitHeaderMenu()
