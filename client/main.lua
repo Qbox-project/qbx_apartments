@@ -1,3 +1,4 @@
+lib.locale()
 local config = require 'config.client'
 local sharedConfig = require 'config.shared'
 local apartmentZones = {}
@@ -21,54 +22,49 @@ end
 
 local function showEntranceHeaderMenu(id)
     local headerMenu = {}
-
     local isOwned = lib.callback.await('apartments:IsOwner', false, id)
-
     if isOwned then
         headerMenu[#headerMenu + 1] = {
             icon = "fa-solid fa-door-open",
-            title = Lang:t('text.enter'),
+            title = locale('text.enter'),
             event = 'apartments:client:EnterApartment',
             args = id
         }
     else
         headerMenu[#headerMenu + 1] = {
             icon = "fa-solid fa-boxes-packing",
-            title = Lang:t('text.move_here'),
+            title = locale('text.move_here'),
             event = 'apartments:client:UpdateApartment',
             args = id
         }
     end
-
     headerMenu[#headerMenu + 1] = {
         icon = "fa-solid fa-bell",
-        title = Lang:t('text.ring_doorbell'),
+        title = locale('text.ring_doorbell'),
         event = 'apartments:client:DoorbellMenu',
     }
-
     lib.registerContext({
         id = 'apartment_context_menu',
-        title = Lang:t('text.menu_header'),
+        title = locale('text.menu_header'),
         options = headerMenu
     })
-
     lib.showContext('apartment_context_menu')
 end
 
 local function showExitHeaderMenu()
     lib.registerContext({
         id = 'apartment_exit_context_menu',
-        title = Lang:t('text.menu_header'),
+        title = locale('text.menu_header'),
         options = {
-            { icon = "fa-solid fa-lock-open", title = Lang:t('text.open_door'), event = 'apartments:client:OpenDoor', },
-            { icon = "fa-solid fa-door-open", title = Lang:t('text.leave'), event = 'apartments:client:LeaveApartment', },
+            { icon = "fa-solid fa-lock-open", title = locale('text.open_door'), event = 'apartments:client:OpenDoor', },
+            { icon = "fa-solid fa-door-open", title = locale('text.leave'), event = 'apartments:client:LeaveApartment', },
         }
     })
     lib.showContext('apartment_exit_context_menu')
 end
 
 local function onEnter(self)
-    lib.showTextUI(Lang:t('text.' .. self.typ))
+    lib.showTextUI(locale('text.'..self.typ))
     currentEntrance = self.aptId
 end
 
@@ -128,7 +124,6 @@ local function createInsidePoints(id, data)
         typ = 'door_inside',
         aptId = id
     })
-
     apartmentZones[id].stash = lib.zones.sphere({
         coords = vector3(sharedConfig.locations[currentApartment].enter.x - data.stash.x, sharedConfig.locations[currentApartment].enter.y - data.stash.y, sharedConfig.locations[currentApartment].enter.z - currentOffset + data.stash.z),
         radius = 1.0,
@@ -139,7 +134,6 @@ local function createInsidePoints(id, data)
         typ = 'open_stash',
         aptId = id
     })
-
     apartmentZones[id].clothes = lib.zones.sphere({
         coords = vector3(sharedConfig.locations[currentApartment].enter.x - data.clothes.x, sharedConfig.locations[currentApartment].enter.y - data.clothes.y, sharedConfig.locations[currentApartment].enter.z - currentOffset + data.clothes.z),
         radius = 1.0,
@@ -150,7 +144,6 @@ local function createInsidePoints(id, data)
         typ = 'change_outfit',
         aptId = id
     })
-
     apartmentZones[id].logout = lib.zones.sphere({
         coords = vector3(sharedConfig.locations[currentApartment].enter.x - data.logout.x, sharedConfig.locations[currentApartment].enter.y + data.logout.y, sharedConfig.locations[currentApartment].enter.z - currentOffset + data.logout.z),
         radius = 1.0,
@@ -173,7 +166,6 @@ end
 local function enterApartment(house, apartmentId, new)
     currentApartmentId = apartmentId
     currentApartment = house
-
     TriggerServerEvent("InteractSound_SV:PlayOnSource", "houses_door_open", 0.1)
     openHouseAnim()
     local offset = lib.callback.await('apartments:GetApartmentOffset', false, apartmentId)
@@ -228,11 +220,10 @@ end
 local function menuOwners()
     local apartments = lib.callback.await('apartments:GetAvailableApartments', false, currentEntrance)
     if not next(apartments) then
-        exports.qbx_core:Notify(Lang:t('error.nobody_home'), "error", 3500)
+        exports.qbx_core:Notify(locale('error.nobody_home'), "error", 3500)
         lib.hideContext(false)
     else
         local aptsMenu = {}
-
         for k, v in pairs(apartments) do
             aptsMenu[#aptsMenu+1] = {
                 title = v,
@@ -240,13 +231,11 @@ local function menuOwners()
                 args = { apartmentId = k }
             }
         end
-
         lib.registerContext({
             id = 'apartment_tennants_context_menu',
-            title = Lang:t('text.tennants'),
+            title = locale('text.tennants'),
             options = aptsMenu
         })
-
         lib.showContext('apartment_tennants_context_menu')
     end
 end
@@ -340,12 +329,12 @@ end)
 RegisterNetEvent('apartments:client:RingDoor', function(player, _)
     currentDoorBell = player
     TriggerServerEvent("InteractSound_SV:PlayOnSource", "doorbell", 0.1)
-    exports.qbx_core:Notify(Lang:t('info.at_the_door'))
+    exports.qbx_core:Notify(locale('info.at_the_door'))
 end)
 
 RegisterNetEvent('apartments:client:OpenDoor', function()
     if currentDoorBell == 0 then
-        exports.qbx_core:Notify(Lang:t('error.nobody_at_door'))
+        exports.qbx_core:Notify(locale('error.nobody_at_door'))
         return
     end
     TriggerServerEvent("apartments:server:OpenDoor", currentDoorBell, currentApartmentId, currentEntrance)
@@ -356,7 +345,6 @@ RegisterNetEvent('apartments:client:SetHomeBlip', function(home)
     CreateThread(function()
         for name, _ in pairs(sharedConfig.locations) do
             RemoveBlip(sharedConfig.locations[name].blip)
-
             sharedConfig.locations[name].blip = AddBlipForCoord(sharedConfig.locations[name].enter.x, sharedConfig.locations[name].enter.y, sharedConfig.locations[name].enter.z)
             if (name == home) then
                 SetBlipSprite(sharedConfig.locations[name].blip, 475)
@@ -369,7 +357,6 @@ RegisterNetEvent('apartments:client:SetHomeBlip', function(home)
             SetBlipScale(sharedConfig.locations[name].blip, 0.65)
             SetBlipAsShortRange(sharedConfig.locations[name].blip, true)
             SetBlipColour(sharedConfig.locations[name].blip, 3)
-
             AddTextEntry(sharedConfig.locations[name].label, sharedConfig.locations[name].label)
             BeginTextCommandSetBlipName(sharedConfig.locations[name].label)
             EndTextCommandSetBlipName(sharedConfig.locations[name].blip)
@@ -393,16 +380,14 @@ end)
 RegisterNetEvent('apartments:client:SpawnInApartment', function(apartmentId, apartment, ownerCid)
     local pos = GetEntityCoords(cache.ped)
     local new = true
-    
     if rangDoorbell then
         new = false
         local doorbelldist = #(pos - sharedConfig.locations[rangDoorbell].enter.xyz)
         if doorbelldist > 5 then
-            exports.qbx_core:Notify(Lang:t('error.to_far_from_door'))
+            exports.qbx_core:Notify(locale('error.to_far_from_door'))
             return
         end
     end
-
     currentApartment = apartment
     currentApartmentId = apartmentId
     enterApartment(apartment, apartmentId, new)
@@ -430,7 +415,6 @@ AddEventHandler('onResourceStop', function(resource)
             DoScreenFadeIn(500)
             DoScreenFadeIn(1000)
         end)
-
         local coord = sharedConfig.locations[currentApartment].enter
         SetEntityCoords(cache.ped, coord.x, coord.y, coord.z, false, false, false, false)
         SetEntityHeading(cache.ped, coord.w)
