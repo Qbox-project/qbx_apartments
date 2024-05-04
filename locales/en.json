@@ -1,0 +1,30 @@
+{
+    "error": {
+        "to_far_from_door": "You are too far away from the Doorbell",
+        "nobody_home": "There is nobody home..",
+        "nobody_at_door": "There is nobody at the door..."
+    },
+    "success": {
+        "receive_apart": "You got an apartment",
+        "changed_apart": "You moved apartments"
+    },
+    "info": {
+        "at_the_door": "Someone is at the door!"
+    },
+    "text": {
+        "options": "[E] Apartment Options",
+        "menu_header": "Apartments",
+        "door_outside": "[E] - Apartments",
+        "enter": "Enter Apartment",
+        "ring_doorbell": "Ring Doorbell",
+        "logout": "[E] - Character Logout",
+        "change_outfit": "[E] - Change Outfit",
+        "open_stash": "[E] - Open Stash",
+        "move_here": "Move Here",
+        "open_door": "Open Door",
+        "door_inside": "[E] - Door",
+        "leave": "Leave Apartment",
+        "close_menu": "⬅ Close Menu",
+        "tennants": "Tenants"
+    }
+}
