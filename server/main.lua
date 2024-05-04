@@ -1,3 +1,4 @@
+lib.locale()
 local config = require 'config.server'
 local sharedConfig = require 'config.shared'
 local ApartmentObjects = {}
@@ -19,12 +20,10 @@ local function getApartmentInfo(apartmentId)
 end
 
 -- Events
-
 RegisterNetEvent('qb-apartments:server:SetInsideMeta', function(house, insideId, bool, isVisiting)
     local src = source
     local player = exports.qbx_core:GetPlayer(src)
     local insideMeta = player.PlayerData.metadata.inside
-
     if bool then
         local routeId = insideId:gsub("[^%-%d]", "")
         if not isVisiting then
@@ -54,13 +53,8 @@ RegisterNetEvent('apartments:server:CreateApartment', function(type, label)
     local num = createApartmentId(type)
     local apartmentId = type .. num
     label = label .. " " .. num
-    MySQL.insert('INSERT INTO apartments (name, type, label, citizenid) VALUES (?, ?, ?, ?)', {
-        apartmentId,
-        type,
-        label,
-        player.PlayerData.citizenid
-    })
-    exports.qbx_core:Notify(src, Lang:t('success.receive_apart').." ("..label..")")
+    MySQL.insert('INSERT INTO apartments (name, type, label, citizenid) VALUES (?, ?, ?, ?)', { apartmentId, type, label, player.PlayerData.citizenid})
+    exports.qbx_core:Notify(src, locale('success.receive_apart').."("..label..")")
     TriggerClientEvent("apartments:client:SpawnInApartment", src, apartmentId, type)
     TriggerClientEvent("apartments:client:SetHomeBlip", src, type)
 end)
@@ -69,7 +63,7 @@ RegisterNetEvent('apartments:server:UpdateApartment', function(type, label)
     local src = source
     local player = exports.qbx_core:GetPlayer(src)
     MySQL.update('UPDATE apartments SET type = ?, label = ? WHERE citizenid = ?', { type, label, player.PlayerData.citizenid })
-    exports.qbx_core:Notify(src, Lang:t('success.changed_apart'))
+    exports.qbx_core:Notify(src, locale('success.changed_apart'))
     TriggerClientEvent("apartments:client:SetHomeBlip", src, type)
 end)
 
@@ -95,22 +89,18 @@ RegisterNetEvent('apartments:server:AddObject', function(apartmentId, apartment,
     local src = source
     local player = exports.qbx_core:GetPlayer(src)
     local apartmentObj = ApartmentObjects[apartment]
-
     if not apartmentObj then
         ApartmentObjects[apartment] = {}
         apartmentObj = ApartmentObjects[apartment]
     end
-
     if not apartmentObj.apartments then
         apartmentObj.apartments = {}
     end
-
     if not apartmentObj.apartments[apartmentId] then
         apartmentObj.apartments[apartmentId] = {}
         apartmentObj.apartments[apartmentId].offset = offset
         apartmentObj.apartments[apartmentId].players = {}
     end
-
     apartmentObj.apartments[apartmentId].players[src] = player.PlayerData.citizenid
 end)
 
@@ -126,13 +116,11 @@ end)
 
 RegisterNetEvent('apartments:server:setCurrentApartment', function(ap)
     local player = exports.qbx_core:GetPlayer(source)
-
     if not player then return end
     player.Functions.SetMetaData('currentapartment', ap)
 end)
 
 -- Callbacks
-
 lib.callback.register('apartments:GetAvailableApartments', function(_, apartment)
     local apartments = {}
     if not ApartmentObjects or not ApartmentObjects[apartment] or not ApartmentObjects[apartment].apartments then
@@ -144,7 +132,6 @@ lib.callback.register('apartments:GetAvailableApartments', function(_, apartment
             apartments[apartmentId] = apartmentInfo.label
         end
     end
-
     return apartments
 end)
 
@@ -178,7 +165,6 @@ lib.callback.register('apartments:GetOwnedApartment', function(source, cid)
         local player = exports.qbx_core:GetPlayer(source)
         cid = player.PlayerData.citizenid
     end
-
     local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { cid })
     if result[1] then
         return result[1]
@@ -188,7 +174,6 @@ end)
 lib.callback.register('apartments:IsOwner', function(source, apartment)
     local player = exports.qbx_core:GetPlayer(source)
     if not player then return end
-
     local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { player.PlayerData.citizenid })
     if result[1] then
         return result[1].type == apartment
