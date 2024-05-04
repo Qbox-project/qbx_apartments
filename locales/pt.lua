@@ -1,26 +1,30 @@
 local Translations = {
     error = {
-        to_far_from_door = 'Estás demasiado longe da campainha',
+        to_far_from_door = 'Estás muito longe da Campainha',
         nobody_home = 'Não está ninguém em casa..',
+        nobody_at_door = 'Não está ninguém à porta...'
     },
     success = {
-        receive_apart = 'Adquiriste um apartamento',
-        changed_apart = 'Mudaste-te para este apartamento',
+        receive_apart = 'Recebeste um apartamento',
+        changed_apart = 'Mudaste de apartamento',
     },
     info = {
-        at_the_door = 'Está alguém à porta!',
+        at_the_door = 'Alguém está à porta!',
     },
     text = {
-        enter = 'Entrar No Apartamento',
-        ring_doorbell = 'Tocar À Campainha',
-        logout = 'Sair Da Personagem',
-        change_outfit = 'Mudar Outfit',
-        open_stash = 'Abrir Baú',
-        move_here = 'Mudar Para Cá',
+        menu_header = 'Apartamentos',
+        door_outside = '[E] - Apartamentos',
+        enter = 'Entrar no Apartamento',
+        ring_doorbell = 'Tocar na Campainha',
+        logout = '[E] - Terminar Sessão de Personagem',
+        change_outfit = '[E] - Mudar Roupa',
+        open_stash = '[E] - Abrir Armazém',
+        move_here = 'Mudar para Aqui',
         open_door = 'Abrir Porta',
-        leave = 'Sair Do Apartamento',
-        close_menu = '⬅ Fehcar Menu',
-        tennants = 'Moradores',
+        door_inside = '[E] - Porta',
+        leave = 'Sair do Apartamento',
+        close_menu = '⬅ Fechar Menu',
+        tennants = 'Inquilinos',
     },
 }
 
