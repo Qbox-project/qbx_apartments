@@ -1,0 +1,30 @@
+{
+    "error": {
+        "to_far_from_door": "Vous êtes trop loin de la sonnette",
+        "nobody_home": "Il n'y a personne à la maison..",
+        "nobody_at_door": "Il n'y a personne à la porte..."
+    },
+    "success": {
+        "receive_apart": "Vous avez obtenu un appartement",
+        "changed_apart": "Vous avez déménagé dans un nouvel appartement"
+    },
+    "info": {
+        "at_the_door": "Quelqu'un est à la porte !"
+    },
+    "text": {
+        "options": "[E] Options d'appartement",
+        "menu_header": "Appartements",
+        "door_outside": "[E] - Appartements",
+        "enter": "Entrer dans l'appartement",
+        "ring_doorbell": "Sonner à la porte",
+        "logout": "[E] - Déconnexion du personnage",
+        "change_outfit": "[E] - Changer de tenue",
+        "open_stash": "[E] - Ouvrir le coffre",
+        "move_here": "Déménager ici",
+        "open_door": "Ouvrir la porte",
+        "door_inside": "[E] - Porte",
+        "leave": "Quitter l'appartement",
+        "close_menu": "⬅ Fermer le menu",
+        "tennants": "Locataires"
+    }
+}
