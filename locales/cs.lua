@@ -25,6 +25,7 @@ local Translations = {
         leave = 'Opustit byt',
         close_menu = '⬅ Zavřít menu',
         tenants = 'Nájemníci',
+    }
 }
 
 if GetConvar('qb_locale', 'en') == 'cs' then
