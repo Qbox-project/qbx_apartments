@@ -24,7 +24,8 @@ local Translations = {
         door_inside = '[E] - Dveře',
         leave = 'Opustit byt',
         close_menu = '⬅ Zavřít menu',
-        tenants = 'Nájemníci',
+        tennants = 'Nájemníci',
+    },
 }
 
 if GetConvar('qb_locale', 'en') == 'cs' then
